@@ -1,0 +1,21 @@
+@use '../../../vars';
+
+mat-card {
+  width: 200px;
+  border-radius: 8px;
+  background-color: vars.$card-bg;
+}
+
+.type-container {
+  padding-top: 1em;
+  > h6 {
+    text-align: center;
+    max-width: 100px;
+    margin: auto;
+    border: 1px solid #ddd;
+    padding: 0.5em 1em;
+    margin-bottom: -0.6em;
+    background-color: #fff;
+    border-radius: 2em;
+  }
+}

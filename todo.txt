@@ -1,0 +1,12 @@
+- Card component
+- Strcuture card data
+- Admin form for making cards
+- Player data (including their deck, XP, points?, etc.)
+- Add drag and drop behaviour for cards
+- Enemy player behaviour
+- free image hosting solution
+- Generate images with AI for cards
+- Space theme?
+- Think of card types
+    (ships, bases, support, strategy, diplomatic, economy)
+- Ark mechanism

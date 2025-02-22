@@ -1,0 +1,10 @@
+@use '../../../vars';
+
+.menu-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 1em;
+  background-color: vars.$menu-bar-color;
+  color: #fff;
+  height: 3em;
+}
