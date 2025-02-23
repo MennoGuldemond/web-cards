@@ -1,6 +1,9 @@
 <div class="menu-container">
   <h1>Web Cards</h1>
-  <button mat-fab aria-label="menu button">
+  <button mat-fab aria-label="menu button" [matMenuTriggerFor]="menu">
     <mat-icon>menu</mat-icon>
   </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item>Card settings</button>
+  </mat-menu>
 </div>

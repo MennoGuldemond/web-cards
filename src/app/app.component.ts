@@ -1,15 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CdkDrag } from '@angular/cdk/drag-drop';
-import { CardComponent } from './components';
 import { Card, CardType, CardRarity } from './models';
 import { CardsService, SettingsService } from './services';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { MenuBarComponent } from './components/menu-bar/menu-bar.component';
+import { MenuBarComponent } from './components';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [MenuBarComponent, CardComponent, CdkDrag, CommonModule, MenuBarComponent],
+  imports: [MenuBarComponent, CommonModule, MenuBarComponent, RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
