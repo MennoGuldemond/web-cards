@@ -3,7 +3,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
 import { CardComponent } from './components';
 import { Card, CardType, CardRarity } from './models';
 import { CardsService, SettingsService } from './services';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MenuBarComponent } from './components/menu-bar/menu-bar.component';
 
@@ -27,16 +27,13 @@ export class AppComponent implements OnInit {
     rarity: CardRarity.common,
   } as Card;
 
-  ngOnInit(): void {
-    this.cards$ = this.cardService.getAll().pipe(
-      map((cards) => {
-        localStorage.setItem('cards', JSON.stringify(cards));
-        return cards;
-      })
-    );
+  ngOnInit() {
+    this.cards$ = this.cardService.getAll();
   }
 
   save() {
-    this.cardService.save(this.testCard);
+    this.cardService.save(this.testCard).subscribe((savedCard) => {
+      console.log(savedCard);
+    });
   }
 }

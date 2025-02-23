@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { addDoc, collection, collectionData, CollectionReference, Firestore } from '@angular/fire/firestore';
 import { Card } from '@app/models';
-import { map, mergeAll, Observable, of } from 'rxjs';
+import { from, map, mergeAll, Observable, of } from 'rxjs';
 import { SettingsService } from './settings.service';
 
 @Injectable({
@@ -19,7 +19,7 @@ export class CardsService {
   getAll(): Observable<Card[]> {
     return this.settingsService.get().pipe(
       map((settings) => {
-        const storedCards = JSON.parse(localStorage.getItem('cards'));
+        const storedCards = this.getFromLocalStorage();
 
         if (!settings.cardsOutdated && storedCards?.length) {
           return of(storedCards);
@@ -27,11 +27,28 @@ export class CardsService {
           return collectionData(this.cardsCollection);
         }
       }),
-      mergeAll()
+      mergeAll(),
+      map((cards: Card[]) => {
+        this.saveToLocalStorage(cards);
+        return cards;
+      })
     ) as Observable<Card[]>;
   }
 
-  save(card: Card): Observable<any> {
-    return of(addDoc(this.cardsCollection, card));
+  save(card: Card): Observable<void> {
+    return from(addDoc(this.cardsCollection, card)).pipe(
+      map(() => {
+        return this.settingsService.updateVersion();
+      }),
+      mergeAll()
+    );
+  }
+
+  private saveToLocalStorage(cards: Card[]) {
+    localStorage.setItem('cards', JSON.stringify(cards));
+  }
+
+  private getFromLocalStorage(): Card[] {
+    return JSON.parse(localStorage.getItem('cards'));
   }
 }
