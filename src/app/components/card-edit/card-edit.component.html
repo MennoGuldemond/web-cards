@@ -1,0 +1,30 @@
+<form [formGroup]="form">
+  <mat-form-field>
+    <mat-label>Title</mat-label>
+    <input matInput formControlName="title" />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Description</mat-label>
+    <textarea
+      matInput
+      placeholder="Write an explanation for the card"
+      formControlName="description"
+      rows="5"
+    ></textarea>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Cost</mat-label>
+    <input matInput formControlName="cost" />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Type</mat-label>
+    <input matInput formControlName="type" />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Rarity</mat-label>
+    <input matInput formControlName="rarity" />
+  </mat-form-field>
+  <div>
+    <button mat-raised-button color="accent" class="save-button" type="submit" [disabled]="form.invalid">Save</button>
+  </div>
+</form>
