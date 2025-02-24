@@ -1,5 +1,14 @@
 import { inject, Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, CollectionReference, Firestore } from '@angular/fire/firestore';
+import {
+  addDoc,
+  collection,
+  collectionData,
+  CollectionReference,
+  Firestore,
+  getDocs,
+  limit,
+  query,
+} from '@angular/fire/firestore';
 import { Card } from '@app/models';
 import { from, map, mergeAll, Observable, of } from 'rxjs';
 import { SettingsService } from './settings.service';
@@ -24,7 +33,7 @@ export class CardsService {
         if (!settings.cardsOutdated && storedCards?.length) {
           return of(storedCards);
         } else {
-          return collectionData(this.cardsCollection);
+          return collectionData(this.cardsCollection, { idField: 'id' });
         }
       }),
       mergeAll(),
@@ -49,6 +58,6 @@ export class CardsService {
   }
 
   private getFromLocalStorage(): Card[] {
-    return JSON.parse(localStorage.getItem('cards'));
+    return JSON.parse(localStorage.getItem('cards') || '[]');
   }
 }
