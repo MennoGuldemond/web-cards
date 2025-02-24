@@ -8,4 +8,4 @@
 - Space theme?
 - Think of card types
     (ships, bases, support, strategy, diplomatic, economy)
-- Ark mechanism
+- Ark mechanism (protect your arc and beat the threat to win a game?)

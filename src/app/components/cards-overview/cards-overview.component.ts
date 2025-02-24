@@ -1,4 +1,4 @@
-import { Component, Inject, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Card } from '@app/models';
 import { CardsService } from '@app/services';
@@ -14,7 +14,7 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class CardsOverviewComponent implements OnInit {
   cardService: CardsService = inject(CardsService);
-  router: Router = Inject(Router);
+  router: Router = inject(Router);
   cards$: Observable<Card[]>;
   displayedColumns: string[] = ['title', 'cost', 'type', 'rarity'];
   dataSource: MatTableDataSource<Card>;
@@ -29,7 +29,6 @@ export class CardsOverviewComponent implements OnInit {
   }
 
   newCard() {
-    console.log(this.router);
-    // this.router.navigate(['edit']);
+    this.router.navigate(['card-edit']);
   }
 }

@@ -1,0 +1,11 @@
+.input-columns {
+  display: flex;
+  gap: 2em;
+
+  > div {
+    display: flex;
+    flex: 50%;
+    flex-direction: column;
+    gap: 1em;
+  }
+}

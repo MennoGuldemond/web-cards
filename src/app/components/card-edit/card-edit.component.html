@@ -1,30 +1,53 @@
 <form [formGroup]="form">
-  <mat-form-field>
-    <mat-label>Title</mat-label>
-    <input matInput formControlName="title" />
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Description</mat-label>
-    <textarea
-      matInput
-      placeholder="Write an explanation for the card"
-      formControlName="description"
-      rows="5"
-    ></textarea>
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Cost</mat-label>
-    <input matInput formControlName="cost" />
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Type</mat-label>
-    <input matInput formControlName="type" />
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Rarity</mat-label>
-    <input matInput formControlName="rarity" />
-  </mat-form-field>
+  <div class="input-columns">
+    <div>
+      <mat-form-field>
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Cost</mat-label>
+        <input matInput formControlName="cost" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Type</mat-label>
+        <mat-select formControlName="type">
+          <mat-option *ngFor="let cardType of cardTypeEnum | keyvalue" [value]="cardType.value">
+            {{ cardType.key }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Rarity</mat-label>
+        <mat-select formControlName="rarity">
+          <mat-option *ngFor="let rarity of rarityEnum | keyvalue" [value]="rarity.value">
+            {{ rarity.key }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-label>Description</mat-label>
+        <textarea
+          matInput
+          placeholder="Write an explanation for the card"
+          formControlName="description"
+          rows="5"
+        ></textarea>
+      </mat-form-field>
+    </div>
+  </div>
   <div>
-    <button mat-raised-button color="accent" class="save-button" type="submit" [disabled]="form.invalid">Save</button>
+    <button
+      mat-raised-button
+      color="accent"
+      class="save-button"
+      type="submit"
+      [disabled]="form.invalid"
+      (click)="save()"
+    >
+      Save
+    </button>
   </div>
 </form>
