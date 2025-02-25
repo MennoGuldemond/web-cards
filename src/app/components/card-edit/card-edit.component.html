@@ -1,4 +1,4 @@
-<form [formGroup]="form">
+<form *ngIf="form" [formGroup]="form">
   <div class="input-columns">
     <div>
       <mat-form-field>
@@ -7,7 +7,7 @@
       </mat-form-field>
       <mat-form-field>
         <mat-label>Cost</mat-label>
-        <input matInput formControlName="cost" />
+        <input matInput formControlName="cost" type="number" />
       </mat-form-field>
       <mat-form-field>
         <mat-label>Type</mat-label>

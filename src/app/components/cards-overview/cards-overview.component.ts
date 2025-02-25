@@ -5,10 +5,11 @@ import { CardsService } from '@app/services';
 import { map, Observable } from 'rxjs';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-cards-overview',
-  imports: [MatTableModule, CommonModule, AsyncPipe, RouterModule],
+  imports: [MatTableModule, CommonModule, AsyncPipe, RouterModule, MatButtonModule],
   templateUrl: './cards-overview.component.html',
   styleUrl: './cards-overview.component.scss',
 })
