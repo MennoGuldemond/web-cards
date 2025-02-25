@@ -27,3 +27,7 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="openCard(row)"></tr>
   </table>
 </div>
+
+<div *ngFor="let card of cards$ | async">
+  <app-card [card]="card"></app-card>
+</div>

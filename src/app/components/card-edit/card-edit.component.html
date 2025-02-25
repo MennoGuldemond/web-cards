@@ -1,6 +1,6 @@
 <form *ngIf="form" [formGroup]="form">
   <div class="input-columns">
-    <div>
+    <div class="column">
       <mat-form-field>
         <mat-label>Title</mat-label>
         <input matInput formControlName="title" />
@@ -8,6 +8,10 @@
       <mat-form-field>
         <mat-label>Cost</mat-label>
         <input matInput formControlName="cost" type="number" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Image URL</mat-label>
+        <input matInput formControlName="imageUrl" />
       </mat-form-field>
       <mat-form-field>
         <mat-label>Type</mat-label>
@@ -26,7 +30,7 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div>
+    <div class="column">
       <mat-form-field>
         <mat-label>Description</mat-label>
         <textarea
@@ -36,10 +40,22 @@
           rows="5"
         ></textarea>
       </mat-form-field>
-      <mat-form-field>
-        <mat-label>Image URL</mat-label>
-        <input matInput formControlName="imageUrl" />
-      </mat-form-field>
+      <div formArrayName="effects" class="effects">
+        <div *ngFor="let pair of effects.controls; let i = index" [formGroupName]="i">
+          <mat-form-field>
+            <mat-label>Effect</mat-label>
+            <input matInput formControlName="name" />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>modifier</mat-label>
+            <input matInput formControlName="value" type="number" />
+          </mat-form-field>
+          <button mat-mini-fab (click)="removeEffect(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+      <button mat-raised-button type="button" (click)="addEffect()">Add Effect</button>
     </div>
   </div>
   <div>

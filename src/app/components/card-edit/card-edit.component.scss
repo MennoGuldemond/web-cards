@@ -1,11 +1,20 @@
+form {
+  padding: 1em;
+}
+
 .input-columns {
   display: flex;
   gap: 2em;
 
-  > div {
+  > div.column {
     display: flex;
     flex: 50%;
     flex-direction: column;
     gap: 1em;
   }
+}
+
+.effects > div {
+  display: flex;
+  gap: 1em;
 }
