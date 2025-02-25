@@ -32,4 +32,8 @@ export class CardsOverviewComponent implements OnInit {
   newCard() {
     this.router.navigate(['card-edit']);
   }
+
+  openCard(card: Card) {
+    this.router.navigate([`card-edit/${card.id}`]);
+  }
 }

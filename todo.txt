@@ -1,6 +1,5 @@
 - Card component
 - Strcuture card data
-- Admin form for making cards
 - Add drag and drop behaviour for cards
 - Enemy player behaviour
 - free image hosting solution
