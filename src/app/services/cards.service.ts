@@ -7,6 +7,7 @@ import {
   doc,
   Firestore,
   getDoc,
+  setDoc,
 } from '@angular/fire/firestore';
 import { Card } from '@app/models';
 import { from, map, mergeAll, Observable, of } from 'rxjs';
@@ -50,12 +51,22 @@ export class CardsService {
   }
 
   save(card: Card): Observable<void> {
-    return from(addDoc(this.cardsCollection, card)).pipe(
-      map(() => {
-        return this.settingsService.updateVersion();
-      }),
-      mergeAll()
-    );
+    if (card?.id) {
+      const docRef = doc(this.firestore, 'cards', card.id);
+      return from(setDoc(docRef, card)).pipe(
+        map(() => {
+          return this.settingsService.updateVersion();
+        }),
+        mergeAll()
+      );
+    } else {
+      return from(addDoc(this.cardsCollection, card)).pipe(
+        map(() => {
+          return this.settingsService.updateVersion();
+        }),
+        mergeAll()
+      );
+    }
   }
 
   private saveToLocalStorage(cards: Card[]) {

@@ -20,14 +20,15 @@ export class CardEditComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router: Router = inject(Router);
 
+  cardId: string;
   form: FormGroup;
   cardTypeEnum = CardType;
   rarityEnum = CardRarity;
 
   ngOnInit() {
-    const cardId = this.route.snapshot.paramMap.get('id');
-    if (cardId) {
-      this.cardService.get(cardId).subscribe((card) => {
+    this.cardId = this.route.snapshot.paramMap.get('id');
+    if (this.cardId) {
+      this.cardService.get(this.cardId).subscribe((card) => {
         this.createForm(card);
       });
     } else {
@@ -36,9 +37,10 @@ export class CardEditComponent implements OnInit {
   }
 
   save() {
-    this.cardService.save({ ...this.form.value }).subscribe((savedCard) => {
+    const toSave = this.cardId ? { ...this.form.value, id: this.cardId } : { ...this.form.value };
+    this.cardService.save(toSave).subscribe((savedCard) => {
       console.log(savedCard);
-      this.router.navigate(['card-overview']);
+      this.router.navigate(['cards-overview']);
     });
   }
 
@@ -46,6 +48,7 @@ export class CardEditComponent implements OnInit {
     this.form = new FormGroup({
       title: new FormControl(card?.title, [Validators.required, Validators.maxLength(20)]),
       description: new FormControl(card?.description, [Validators.required, Validators.maxLength(100)]),
+      imageUrl: new FormControl(card?.imageUrl, [Validators.required]),
       cost: new FormControl(card?.cost || 1, [Validators.required, Validators.min(0), Validators.max(10)]),
       type: new FormControl(card?.type || CardType.ship, [Validators.required]),
       rarity: new FormControl(card?.rarity || CardRarity.common, [Validators.required]),
