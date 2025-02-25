@@ -4,10 +4,9 @@ import {
   collection,
   collectionData,
   CollectionReference,
+  doc,
   Firestore,
-  getDocs,
-  limit,
-  query,
+  getDoc,
 } from '@angular/fire/firestore';
 import { Card } from '@app/models';
 import { from, map, mergeAll, Observable, of } from 'rxjs';
@@ -23,6 +22,12 @@ export class CardsService {
 
   constructor() {
     this.cardsCollection = collection(this.firestore, 'cards');
+  }
+
+  get(id: string): Observable<Card> {
+    const docRef = doc(this.firestore, 'cards', id);
+    const docSnapshot = getDoc(docRef);
+    return from(docSnapshot).pipe(map((doc) => (doc.exists() ? (doc.data() as Card) : null)));
   }
 
   getAll(): Observable<Card[]> {
