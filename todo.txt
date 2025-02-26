@@ -1,4 +1,3 @@
-- Strcuture card data
 - Add drag and drop behaviour for cards
 - Enemy player behaviour
 - free image hosting solution

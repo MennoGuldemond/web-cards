@@ -28,6 +28,6 @@
   </table>
 </div>
 
-<div *ngFor="let card of cards$ | async">
-  <app-card [card]="card"></app-card>
+<div class="card-examples">
+  <app-card *ngFor="let card of cards$ | async" [card]="card"></app-card>
 </div>

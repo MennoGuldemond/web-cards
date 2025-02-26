@@ -2,6 +2,7 @@ export enum CardType {
   ship = 'Ship',
   support = 'Support',
   economic = 'Economic',
+  stationUpgrade = 'Station Upgrade',
 }
 
 export enum CardRarity {
