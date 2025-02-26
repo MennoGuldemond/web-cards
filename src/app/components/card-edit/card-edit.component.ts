@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -8,7 +8,6 @@ import { Card, CardEffect, CardRarity, CardType } from '@app/models';
 import { CommonModule, KeyValuePipe } from '@angular/common';
 import { CardsService } from '@app/services';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-card-edit',
