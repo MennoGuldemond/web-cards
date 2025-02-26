@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
-import { Card, CardEffect, CardRarity, CardType } from '@app/models';
+import { Card, CardEffect, CardRarity, CardType, Effects } from '@app/models';
 import { CommonModule, KeyValuePipe } from '@angular/common';
 import { CardsService } from '@app/services';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -32,6 +32,7 @@ export class CardEditComponent implements OnInit {
   form: FormGroup;
   cardTypeEnum = CardType;
   rarityEnum = CardRarity;
+  effectEum = Effects;
 
   get effects(): FormArray {
     return this.form.get('effects') as FormArray;

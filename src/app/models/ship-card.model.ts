@@ -1,5 +1,4 @@
 import { Card } from './card.model';
-import { ShipAbility } from './enums';
 
 export interface ShipCard extends Card {
   baseAttack: number;
@@ -8,5 +7,4 @@ export interface ShipCard extends Card {
   health: number;
   baseInitiative: number;
   initiative: number;
-  abilities: ShipAbility[];
 }

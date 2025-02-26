@@ -10,7 +10,9 @@ export enum CardRarity {
   rare = 'Rare',
 }
 
-export enum ShipAbility {
+export enum Effects {
+  initiative = 'Initiative',
+  health = 'Health',
   stealth = 'Stealth',
-  afterburner = 'Afterburner',
+  dodge = 'Dodge',
 }

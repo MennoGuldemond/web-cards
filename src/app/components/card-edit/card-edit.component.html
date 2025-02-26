@@ -45,7 +45,11 @@
         <div *ngFor="let pair of effects.controls; let i = index" [formGroupName]="i">
           <mat-form-field>
             <mat-label>Effect</mat-label>
-            <input matInput formControlName="name" />
+            <mat-select formControlName="name">
+              <mat-option *ngFor="let effect of effectEum | keyvalue" [value]="effect.value">
+                {{ effect.key }}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
           <mat-form-field>
             <mat-label>modifier</mat-label>
