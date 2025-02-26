@@ -3,11 +3,13 @@
     <mat-card-title>{{ card.title }}</mat-card-title>
     <!-- <mat-card-subtitle></mat-card-subtitle> -->
   </mat-card-header>
-  <div class="image-container">
+  <div class="image-container" [matTooltip]="card.description" [matTooltipPosition]="'right'" matTooltipHideDelay="500">
     <img mat-card-image [src]="card.imageUrl" [alt]="'Photo of the card ' + card.title" />
   </div>
   <mat-card-content>
-    <p>{{ card.description }}</p>
+    <div *ngFor="let effect of card.effects">
+      <p>{{ effect.name + ' ' + effect.value }}</p>
+    </div>
   </mat-card-content>
   <mat-card-footer>
     <div class="type-container">
