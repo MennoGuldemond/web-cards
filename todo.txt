@@ -2,7 +2,6 @@
 - Enemy player behaviour
 - free image hosting solution
 - Generate images with AI for cards
-- Space theme?
 - Think of card types
     (ships, bases, support, strategy, diplomatic, economy)
 - Ark mechanism (protect your arc and beat the threat to win a game?)
