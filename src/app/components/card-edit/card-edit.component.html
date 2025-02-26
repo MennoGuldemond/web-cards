@@ -40,6 +40,7 @@
           rows="5"
         ></textarea>
       </mat-form-field>
+      <button mat-raised-button type="button" (click)="addEffect()">Add Effect</button>
       <div formArrayName="effects" class="effects">
         <div *ngFor="let pair of effects.controls; let i = index" [formGroupName]="i">
           <mat-form-field>
@@ -55,7 +56,6 @@
           </button>
         </div>
       </div>
-      <button mat-raised-button type="button" (click)="addEffect()">Add Effect</button>
     </div>
   </div>
   <div>
