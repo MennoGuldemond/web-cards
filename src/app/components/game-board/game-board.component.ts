@@ -5,7 +5,6 @@ import { CardsService } from '@app/services';
 import { Card } from '@app/models';
 import { CardResolver, EffectResolver } from '@app/utils';
 import { CardComponent } from '../card/card.component';
-import { map } from 'rxjs';
 
 @Component({
   selector: 'app-game-board',
@@ -27,14 +26,7 @@ export class GameBoardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.cardService
-      .getAll()
-      .pipe(
-        map((c) => {
-          this.hand = [...c, ...c];
-        })
-      )
-      .subscribe();
+    this.cardService.getAll().subscribe((cards) => (this.hand = cards));
   }
 
   dropInField(event: any) {
