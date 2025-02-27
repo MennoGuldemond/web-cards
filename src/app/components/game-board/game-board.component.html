@@ -1,0 +1,20 @@
+<div class="board">
+  <div class="enemy-field"></div>
+  <div
+    class="field"
+    cdkDropList
+    #fieldList="cdkDropList"
+    [cdkDropListData]="cardsInPlay"
+    [cdkDropListConnectedTo]="[handList]"
+    (cdkDropListDropped)="dropInField($event)"
+  >
+    @for (card of cardsInPlay; track card) {
+    <app-card cdkDrag [cdkDragDisabled]="true" [card]="card"></app-card>
+    }
+  </div>
+  <div class="hand" cdkDropList #handList="cdkDropList" [cdkDropListData]="hand" [cdkDropListConnectedTo]="[fieldList]">
+    @for (card of hand; track card) {
+    <app-card cdkDrag [card]="card"></app-card>
+    }
+  </div>
+</div>

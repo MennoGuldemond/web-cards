@@ -1,6 +1,8 @@
 @use '../../../vars';
 
 .space-card {
+  transform: scale(0.8);
+
   height: 350px;
   width: 250px;
   background: radial-gradient(circle, #222 30%, #000 100%);
@@ -13,7 +15,7 @@
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 
   &:hover {
-    transform: scale(1.05) rotateY(5deg);
+    transform: scale(0.9) rotateY(5deg);
     box-shadow: 0 0 20px rgba(0, 255, 255, 0.8), 0 0 40px rgba(0, 255, 255, 0.6), 0 0 60px rgba(0, 255, 255, 0.4);
   }
 

@@ -1,0 +1,52 @@
+import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
+import { CdkDrag, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CardsService } from '@app/services';
+import { Card } from '@app/models';
+import { CardResolver, EffectResolver } from '@app/utils';
+import { CardComponent } from '../card/card.component';
+import { map } from 'rxjs';
+
+@Component({
+  selector: 'app-game-board',
+  imports: [CommonModule, CardComponent, CdkDrag, CdkDropList],
+  templateUrl: './game-board.component.html',
+  styleUrl: './game-board.component.scss',
+})
+export class GameBoardComponent implements OnInit {
+  cardService: CardsService = inject(CardsService);
+  hand: Card[] = [];
+  cardsInPlay: Card[] = [];
+
+  cardResolver: CardResolver;
+  effectsResolver: EffectResolver;
+
+  constructor() {
+    this.cardResolver = new CardResolver();
+    this.effectsResolver = new EffectResolver();
+  }
+
+  ngOnInit() {
+    this.cardService
+      .getAll()
+      .pipe(
+        map((c) => {
+          this.hand = [...c, ...c];
+        })
+      )
+      .subscribe();
+  }
+
+  dropInField(event: any) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+    }
+  }
+
+  playCard(card: Card) {
+    console.log(card);
+    this.cardResolver.play(card);
+  }
+}

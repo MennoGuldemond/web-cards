@@ -1,0 +1,38 @@
+.board {
+  display: flex;
+  flex-flow: column;
+  height: calc(100% - 5em);
+
+  .enemy-field {
+    flex: 1;
+    background-color: black;
+  }
+
+  .field {
+    display: flex;
+    justify-content: center;
+    height: 350px;
+    background-image: url('../../../../public/images/galaxy\ bg.jpeg');
+    background-size: 512px auto;
+    background-repeat: repeat;
+    background-color: black;
+  }
+
+  .hand {
+    display: flex;
+    justify-content: center;
+    height: 350px;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)),
+      url('../../../../public/images/galaxy\ bg.jpeg');
+    background-size: 512px auto;
+    background-repeat: repeat;
+    background-color: black;
+
+    app-card {
+      margin-left: -100px;
+      &:hover {
+        z-index: 10;
+      }
+    }
+  }
+}
