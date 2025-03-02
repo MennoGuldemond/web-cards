@@ -7,9 +7,9 @@
   <img mat-card-image [src]="card.imageUrl" alt="{{ card.title }}" class="card-image" />
 
   <mat-card-content>
-    <div *ngFor="let effect of card.effects">
-      <p>{{ effect.name }} {{ effect.value > 0 ? '+' : '-' }} {{ effect.value }}</p>
-    </div>
+    @for (effect of card.effects; track effect) {
+    <p>{{ effect.name }} {{ effect.value > 0 ? '+' : '-' }} {{ effect.value }}</p>
+    }
     <p class="card-flavor">{{ card.description }}</p>
   </mat-card-content>
   <mat-card-footer>

@@ -20,4 +20,21 @@ export class EffectResolver {
         break;
     }
   }
+
+  getDescription(effect: CardEffect): string {
+    switch (effect.name) {
+      case Effects.health:
+        return `Increases max health by ${effect.value}.`;
+      case Effects.initiative:
+        return `Change initiative by ${effect.value}.`;
+      case Effects.dodge:
+        return ``;
+      case Effects.stealth:
+        return ``;
+      case Effects.regeneration:
+        return `Restore ${effect.value} HP after each round.`;
+      default:
+        return '';
+    }
+  }
 }

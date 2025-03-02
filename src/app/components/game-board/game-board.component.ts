@@ -30,15 +30,13 @@ export class GameBoardComponent implements OnInit {
   }
 
   dropInField(event: any) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+    transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+    if (event.item.data) {
+      this.playCard(event.item.data);
     }
   }
 
   playCard(card: Card) {
-    console.log(card);
     this.cardResolver.play(card);
   }
 }
