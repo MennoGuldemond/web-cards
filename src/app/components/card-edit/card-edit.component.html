@@ -62,6 +62,24 @@
       </div>
     </div>
   </div>
+  <div class="input-columns" *ngIf="form.get('type')?.value === cardTypeEnum.ship">
+    <div class="column" formGroupName="ship">
+      <h3>Ship Stats</h3>
+      <mat-form-field>
+        <mat-label>Max Health</mat-label>
+        <input matInput formControlName="maxHealth" type="number" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Base Attack</mat-label>
+        <input matInput formControlName="baseAttack" type="number" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Initiative</mat-label>
+        <input matInput formControlName="initiative" type="number" />
+      </mat-form-field>
+    </div>
+    <div class="column"></div>
+  </div>
   <div>
     <button
       mat-raised-button

@@ -6,11 +6,10 @@ import { map, Observable } from 'rxjs';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { CardComponent } from '../card/card.component';
 
 @Component({
   selector: 'app-cards-overview',
-  imports: [MatTableModule, CommonModule, AsyncPipe, RouterModule, MatButtonModule, CardComponent],
+  imports: [MatTableModule, CommonModule, AsyncPipe, RouterModule, MatButtonModule],
   templateUrl: './cards-overview.component.html',
   styleUrl: './cards-overview.component.scss',
 })

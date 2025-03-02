@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
-import { Card, CardEffect, CardRarity, CardType, Effects } from '@app/models';
+import { Card, CardEffect, CardRarity, CardType, Effects, ShipCard } from '@app/models';
 import { CommonModule, KeyValuePipe } from '@angular/common';
 import { CardsService } from '@app/services';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -50,6 +50,9 @@ export class CardEditComponent implements OnInit {
   }
 
   save() {
+    if (this.form.get('type').value !== CardType.ship) {
+      delete this.form.value.ship;
+    }
     const toSave = this.cardId ? { ...this.form.value, id: this.cardId } : { ...this.form.value };
     this.cardService.save(toSave).subscribe((savedCard) => {
       console.log(savedCard);
@@ -81,6 +84,38 @@ export class CardEditComponent implements OnInit {
       type: new FormControl(card?.type || CardType.ship, [Validators.required]),
       rarity: new FormControl(card?.rarity || CardRarity.common, [Validators.required]),
       effects: new FormArray(card?.effects ? card.effects.map((effect) => this.createEffectGroup(effect)) : []),
+      ship: new FormGroup({
+        maxHealth: new FormControl(card['ship']?.maxHealth || 1, [Validators.min(1)]),
+        baseAttack: new FormControl(card['ship']?.baseAttack || 1, [Validators.min(0)]),
+        initiative: new FormControl(card['ship']?.initiative || 50, [Validators.min(0)]),
+      }),
     });
+
+    this.form.get('type').valueChanges.subscribe((selectedType) => {
+      this.updateShipStats(selectedType, card);
+    });
+  }
+
+  private updateShipStats(type: string, card: Card) {
+    const shipStats = this.form.get('ship') as FormGroup;
+    if (type === CardType.ship) {
+      const shipData = (card as ShipCard).ship;
+      shipStats.addControl(
+        'maxHealth',
+        new FormControl(shipData?.maxHealth || 1, [Validators.required, Validators.min(1)])
+      );
+      shipStats.addControl(
+        'baseAttack',
+        new FormControl(shipData?.baseAttack || 1, [Validators.required, Validators.min(0)])
+      );
+      shipStats.addControl(
+        'initiative',
+        new FormControl(shipData?.initiative || 50, [Validators.required, Validators.min(0)])
+      );
+    } else {
+      shipStats.removeControl('maxHealth');
+      shipStats.removeControl('baseAttack');
+      shipStats.removeControl('initiative');
+    }
   }
 }

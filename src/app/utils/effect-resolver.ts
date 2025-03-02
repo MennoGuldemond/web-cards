@@ -4,11 +4,11 @@ export class EffectResolver {
   applyToShip(effect: CardEffect, target: ShipCard) {
     switch (effect.name) {
       case Effects.health:
-        const updatedHealth = target.health + effect.value;
-        target.health = updatedHealth > target.maxHealth ? target.maxHealth : updatedHealth;
+        const updatedHealth = target.ship.health + effect.value;
+        target.ship.health = updatedHealth > target.ship.maxHealth ? target.ship.maxHealth : updatedHealth;
         break;
       case Effects.initiative:
-        target.initiative += effect.value;
+        target.ship.initiative += effect.value;
         break;
       default:
         target.effects.push(effect);
