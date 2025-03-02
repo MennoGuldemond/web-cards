@@ -10,13 +10,8 @@ export class EffectResolver {
       case Effects.initiative:
         target.initiative += effect.value;
         break;
-      case Effects.dodge:
-        target.effects.push(effect);
-        break;
-      case Effects.stealth:
-        target.effects.push(effect);
-        break;
       default:
+        target.effects.push(effect);
         break;
     }
   }
