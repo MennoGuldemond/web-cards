@@ -1,9 +1,30 @@
 <div class="menu-container">
-  <h1>Web Cards</h1>
-  <button mat-fab aria-label="menu button" [matMenuTriggerFor]="menu">
+  <h1 class="game-title">Trinity Ark</h1>
+
+  @if (gameState$ | async; as gameState) {
+  <div class="game-state">
+    <div class="state-item">
+      <span>Turn {{ gameState.turn }}</span>
+    </div>
+    <div class="state-item">
+      <mat-icon class="state-icon">health_and_safety</mat-icon>
+      <span>{{ gameState.arkHealth }}</span>
+    </div>
+    <div class="state-item">
+      <mat-icon class="state-icon">monetization_on</mat-icon>
+      <span>{{ gameState.credits }}</span>
+    </div>
+    <div class="state-item">
+      <mat-icon class="state-icon">local_gas_station</mat-icon>
+      <span>{{ gameState.fuel }}</span>
+    </div>
+  </div>
+  }
+
+  <button mat-fab aria-label="menu button" [matMenuTriggerFor]="menu" class="menu-button">
     <mat-icon>menu</mat-icon>
   </button>
-  <mat-menu #menu="matMenu">
-    <button mat-menu-item routerLink="/cards-overview">Card settings</button>
+  <mat-menu #menu="matMenu" class="custom-menu">
+    <button mat-menu-item routerLink="/cards-overview"><mat-icon>settings</mat-icon> Card Settings</button>
   </mat-menu>
 </div>
