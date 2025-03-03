@@ -4,14 +4,26 @@
   height: calc(100% - 5em);
 
   .enemy-field {
-    flex: 1;
-    background-color: black;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+
+    .enemy-card {
+      transform: scale(0.5);
+      filter: drop-shadow(0 0 10px red);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .enemy-card:hover {
+      transform: scale(0.7);
+    }
   }
 
   .field {
     display: flex;
     justify-content: center;
-    height: 350px;
+    min-height: 50%;
     background-image: url('../../../../public/images/galaxy\ bg.jpeg');
     background-size: 512px auto;
     background-repeat: repeat;
@@ -21,7 +33,7 @@
   .hand {
     display: flex;
     justify-content: center;
-    height: 350px;
+    min-height: 50%;
     background-image: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)),
       url('../../../../public/images/galaxy\ bg.jpeg');
     background-size: 512px auto;
