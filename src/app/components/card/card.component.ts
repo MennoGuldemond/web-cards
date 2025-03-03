@@ -1,13 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { Card, CardEffect, CardType, ShipCard } from '@app/models';
 import { EffectResolver } from '@app/utils';
 
 @Component({
   selector: 'app-card',
-  imports: [CommonModule, MatCardModule, MatTooltipModule],
+  imports: [CommonModule, MatCardModule],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss',
 })

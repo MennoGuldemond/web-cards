@@ -14,9 +14,7 @@
   <mat-card-content>
     @for (effect of card.effects; track effect) {
     <p>{{ effect.name }} {{ effect.value > 0 ? '+' : '-' }} {{ effect.value }}</p>
-    }
-    <!-- <p class="card-flavor">{{ card.description }}</p> -->
-    @if (isShip()) {
+    } @if (isShip()) {
     <div class="attack-container">
       <img src="images/attack-icon.png" class="stats-icon" alt="Attack Icon" />
       <span class="stats-value">{{ getShipData().attack }}</span>
