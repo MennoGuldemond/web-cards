@@ -51,6 +51,7 @@ export class CardEditComponent implements OnInit {
 
   save() {
     if (this.form.get('type').value !== CardType.ship) {
+      // Don't save ship data when it's not a ship
       delete this.form.value.ship;
     }
     const toSave = this.cardId ? { ...this.form.value, id: this.cardId } : { ...this.form.value };

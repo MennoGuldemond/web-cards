@@ -1,4 +1,9 @@
-<mat-card class="space-card">
+<mat-card
+  class="space-card"
+  [ngClass]="getCardStyle()"
+  (mouseover)="showTooltip = true"
+  (mouseleave)="showTooltip = false"
+>
   <div class="card-header">
     <span class="card-title">{{ card.title }}</span>
     <span class="card-cost">{{ card.cost }}</span>
@@ -10,11 +15,31 @@
     @for (effect of card.effects; track effect) {
     <p>{{ effect.name }} {{ effect.value > 0 ? '+' : '-' }} {{ effect.value }}</p>
     }
-    <p class="card-flavor">{{ card.description }}</p>
+    <!-- <p class="card-flavor">{{ card.description }}</p> -->
+    @if (isShip()) {
+    <div class="attack-container">
+      <img src="images/attack-icon.png" class="stats-icon" alt="Attack Icon" />
+      <span class="stats-value">{{ getShipData().attack }}</span>
+    </div>
+    <div class="defence-container">
+      <img src="images/defence-icon.png" class="stats-icon" alt="Defence Icon" />
+      <span class="stats-value">{{ getShipData().health }}</span>
+    </div>
+    }
   </mat-card-content>
   <mat-card-footer>
     <div class="type-container">
       <h6>{{ card.type }} - {{ card.rarity }}</h6>
     </div>
   </mat-card-footer>
+
+  <div class="tooltip" *ngIf="showTooltip">
+    <h3>{{ card.title }}</h3>
+    <p>{{ card.description }}</p>
+    @for (effect of card.effects; track effect) {
+    <p>
+      <strong>{{ effect.name }}: </strong>{{ getEffectDescription(effect) }}
+    </p>
+    }
+  </div>
 </mat-card>

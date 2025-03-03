@@ -16,14 +16,14 @@ export class EffectResolver {
     }
   }
 
-  getDescription(effect: CardEffect): string {
+  static getDescription(effect: CardEffect): string {
     switch (effect.name) {
       case Effects.health:
         return `Increases max health by ${effect.value}.`;
       case Effects.initiative:
         return `Change initiative by ${effect.value}.`;
       case Effects.dodge:
-        return ``;
+        return `Decreases the change to be hit by ${effect.value}%`;
       case Effects.stealth:
         return ``;
       case Effects.regeneration:
