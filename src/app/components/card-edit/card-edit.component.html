@@ -1,4 +1,5 @@
-<form *ngIf="form" [formGroup]="form">
+@if (form) {
+<form [formGroup]="form">
   <div class="input-columns">
     <div class="column">
       <mat-form-field>
@@ -16,17 +17,21 @@
       <mat-form-field>
         <mat-label>Type</mat-label>
         <mat-select formControlName="type">
-          <mat-option *ngFor="let cardType of cardTypeEnum | keyvalue" [value]="cardType.value">
+          @for (cardType of cardTypeEnum | keyvalue; track cardType) {
+          <mat-option [value]="cardType.value">
             {{ cardType.key }}
           </mat-option>
+          }
         </mat-select>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Rarity</mat-label>
         <mat-select formControlName="rarity">
-          <mat-option *ngFor="let rarity of rarityEnum | keyvalue" [value]="rarity.value">
+          @for (rarity of rarityEnum | keyvalue; track rarity) {
+          <mat-option [value]="rarity.value">
             {{ rarity.key }}
           </mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </div>
@@ -42,13 +47,16 @@
       </mat-form-field>
       <button mat-raised-button type="button" (click)="addEffect()">Add Effect</button>
       <div formArrayName="effects" class="effects">
-        <div *ngFor="let pair of effects.controls; let i = index" [formGroupName]="i">
+        @for (pair of effects.controls; track pair; let i = $index) {
+        <div [formGroupName]="i">
           <mat-form-field>
             <mat-label>Effect</mat-label>
             <mat-select formControlName="name">
-              <mat-option *ngFor="let effect of effectEum | keyvalue" [value]="effect.value">
+              @for (effect of effectEum | keyvalue; track effect) {
+              <mat-option [value]="effect.value">
                 {{ effect.key }}
               </mat-option>
+              }
             </mat-select>
           </mat-form-field>
           <mat-form-field>
@@ -59,10 +67,12 @@
             <mat-icon>delete</mat-icon>
           </button>
         </div>
+        }
       </div>
     </div>
   </div>
-  <div class="input-columns" *ngIf="form.get('type')?.value === cardTypeEnum.ship">
+  @if (form.get('type')?.value === cardTypeEnum.ship) {
+  <div class="input-columns">
     <div class="column" formGroupName="ship">
       <h3>Ship Stats</h3>
       <mat-form-field>
@@ -80,6 +90,7 @@
     </div>
     <div class="column"></div>
   </div>
+  }
   <div>
     <button
       mat-raised-button
@@ -93,3 +104,4 @@
     </button>
   </div>
 </form>
+}

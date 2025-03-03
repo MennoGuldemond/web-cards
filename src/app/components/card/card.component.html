@@ -31,7 +31,8 @@
     </div>
   </mat-card-footer>
 
-  <div class="tooltip" *ngIf="showTooltip">
+  @if (showTooltip) {
+  <div class="tooltip">
     <h3>{{ card.title }}</h3>
     <p>{{ card.description }}</p>
     @for (effect of card.effects; track effect) {
@@ -40,4 +41,5 @@
     </p>
     }
   </div>
+  }
 </mat-card>
