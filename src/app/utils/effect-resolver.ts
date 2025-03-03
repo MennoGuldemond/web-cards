@@ -25,7 +25,7 @@ export class EffectResolver {
       case Effects.dodge:
         return `Decreases the change to be hit by ${effect.value}%`;
       case Effects.stealth:
-        return ``;
+        return `Cannot be attacked directly`;
       case Effects.regeneration:
         return `Restore ${effect.value} HP after each round.`;
       default:
