@@ -19,7 +19,12 @@
   </div>
   <div class="hand" cdkDropList #handList="cdkDropList" [cdkDropListData]="hand" [cdkDropListConnectedTo]="[fieldList]">
     @for (card of hand; track card) {
-    <app-card cdkDrag [cdkDragData]="card" [card]="card"></app-card>
+    <app-card
+      cdkDrag
+      [cdkDragData]="card"
+      [cdkDragDisabled]="(gameState$ | async).credits < card.cost"
+      [card]="card"
+    ></app-card>
     }
   </div>
 </div>
