@@ -46,7 +46,7 @@
         z-index: 10;
       }
       &.cdk-drag-disabled {
-        filter: grayscale(80%) brightness(60%); /* Desaturates & darkens */
+        filter: grayscale(80%) brightness(80%);
       }
     }
   }
