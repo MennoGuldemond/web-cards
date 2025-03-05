@@ -41,12 +41,14 @@
     background-color: black;
 
     app-card {
+      cursor: grab;
       margin-left: -100px;
       &:hover {
         z-index: 10;
       }
       &.cdk-drag-disabled {
         filter: grayscale(80%) brightness(80%);
+        cursor: not-allowed !important;
       }
     }
   }

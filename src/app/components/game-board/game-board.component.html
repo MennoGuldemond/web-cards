@@ -22,7 +22,7 @@
     <app-card
       cdkDrag
       [cdkDragData]="card"
-      [cdkDragDisabled]="(gameState$ | async).credits < card.cost"
+      [cdkDragDisabled]="(canAfford(card) | async) === false"
       [card]="card"
     ></app-card>
     }
