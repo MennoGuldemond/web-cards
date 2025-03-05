@@ -3,7 +3,6 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CdkDrag, CdkDropList, transferArrayItem } from '@angular/cdk/drag-drop';
 import { CardsService, GameService } from '@app/services';
 import { Card, CardType, GameState } from '@app/models';
-import { CardResolver, EffectResolver } from '@app/utils';
 import { CardComponent } from '../card/card.component';
 import { map, Observable, take } from 'rxjs';
 
@@ -21,14 +20,6 @@ export class GameBoardComponent implements OnInit {
   hand: Card[] = [];
   cardsInPlay: Card[] = [];
 
-  cardResolver: CardResolver;
-  effectsResolver: EffectResolver;
-
-  constructor() {
-    this.cardResolver = new CardResolver();
-    this.effectsResolver = new EffectResolver();
-  }
-
   ngOnInit() {
     this.cardService.getAll().subscribe((cards) => (this.hand = cards));
     this.gameState$ = this.gameService.gameState$;
@@ -37,7 +28,7 @@ export class GameBoardComponent implements OnInit {
   dropInField(event: any) {
     transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
     if (event.item.data) {
-      this.playCard(event.item.data);
+      this.gameService.playCard(event.item.data);
     }
   }
 
@@ -52,9 +43,5 @@ export class GameBoardComponent implements OnInit {
         }
       })
     );
-  }
-
-  playCard(card: Card) {
-    this.cardResolver.play(card);
   }
 }
