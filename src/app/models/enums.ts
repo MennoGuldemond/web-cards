@@ -18,3 +18,10 @@ export enum Effects {
   dodge = 'Dodge', // Decreases the chance of being hit in percentages
   regeneration = 'Regeneration', // Restores HP after a round
 }
+
+export enum TurnPhase {
+  EnemyPlay,
+  PlayerPlay,
+  BattleResolve,
+  DrawPhase,
+}
