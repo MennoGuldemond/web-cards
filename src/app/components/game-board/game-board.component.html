@@ -13,12 +13,12 @@
     [cdkDropListConnectedTo]="[handList]"
     (cdkDropListDropped)="dropInField($event)"
   >
-    @for (card of cardsInPlay; track card) {
+    @for (card of cardsInPlay; track card.id) {
     <app-card cdkDrag [cdkDragDisabled]="true" [card]="card"></app-card>
     }
   </div>
   <div class="hand" cdkDropList #handList="cdkDropList" [cdkDropListData]="hand" [cdkDropListConnectedTo]="[fieldList]">
-    @for (card of hand; track card) {
+    @for (card of hand; track card.id) {
     <app-card
       cdkDrag
       [cdkDragData]="card"

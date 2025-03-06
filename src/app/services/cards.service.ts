@@ -10,7 +10,7 @@ import {
   setDoc,
 } from '@angular/fire/firestore';
 import { Card } from '@app/models';
-import { from, map, mergeAll, Observable, of } from 'rxjs';
+import { from, map, Observable, of, switchMap, tap } from 'rxjs';
 import { SettingsService } from './settings.service';
 
 @Injectable({
@@ -18,12 +18,8 @@ import { SettingsService } from './settings.service';
 })
 export class CardsService {
   firestore: Firestore = inject(Firestore);
-  cardsCollection: CollectionReference;
+  cardsCollection: CollectionReference = collection(this.firestore, 'cards');
   settingsService: SettingsService = inject(SettingsService);
-
-  constructor() {
-    this.cardsCollection = collection(this.firestore, 'cards');
-  }
 
   get(id: string): Observable<Card> {
     const docRef = doc(this.firestore, 'cards', id);
@@ -33,47 +29,44 @@ export class CardsService {
 
   getAll(): Observable<Card[]> {
     return this.settingsService.get().pipe(
-      map((settings) => {
+      switchMap((settings) => {
         const storedCards = this.getFromLocalStorage();
-
         if (!settings.cardsOutdated && storedCards?.length) {
-          return of(storedCards);
-        } else {
-          return collectionData(this.cardsCollection, { idField: 'id' });
+          return of(storedCards); // Use cached cards if not outdated
         }
-      }),
-      mergeAll(),
-      map((cards: Card[]) => {
-        this.saveToLocalStorage(cards);
-        return cards;
+        return collectionData(this.cardsCollection, { idField: 'id' }).pipe(
+          tap((cards) => this.saveToLocalStorage(cards as Card[])) // Save fetched cards to local storage
+        ) as Observable<Card[]>;
       })
-    ) as Observable<Card[]>;
+    );
   }
 
   save(card: Card): Observable<void> {
-    if (card?.id) {
-      const docRef = doc(this.firestore, 'cards', card.id);
-      return from(setDoc(docRef, card)).pipe(
-        map(() => {
-          return this.settingsService.updateVersion();
-        }),
-        mergeAll()
-      );
-    } else {
-      return from(addDoc(this.cardsCollection, card)).pipe(
-        map(() => {
-          return this.settingsService.updateVersion();
-        }),
-        mergeAll()
-      );
+    const saveOperation = card?.id
+      ? from(setDoc(doc(this.firestore, 'cards', card.id), card)) // Update existing card
+      : from(addDoc(this.cardsCollection, card)).pipe(map(() => undefined));
+
+    return saveOperation.pipe(
+      tap(() => this.settingsService.updateVersion().subscribe()), // Call updateVersion as a side effect
+      map(() => undefined)
+    );
+  }
+
+  private saveToLocalStorage(cards: Card[]): void {
+    try {
+      localStorage.setItem('cards', JSON.stringify(cards));
+    } catch (error) {
+      console.error('Error saving cards to localStorage', error);
     }
   }
 
-  private saveToLocalStorage(cards: Card[]) {
-    localStorage.setItem('cards', JSON.stringify(cards));
-  }
-
   private getFromLocalStorage(): Card[] {
-    return JSON.parse(localStorage.getItem('cards') || '[]');
+    try {
+      const data = localStorage.getItem('cards');
+      return data ? (JSON.parse(data) as Card[]) : [];
+    } catch (error) {
+      console.error('Error retrieving cards from localStorage', error);
+      return [];
+    }
   }
 }

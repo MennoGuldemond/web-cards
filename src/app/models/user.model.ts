@@ -1,5 +1,4 @@
-export class User implements IUser {
-  recipeIds: string[];
+export class AppUser implements IUser {
   createdOn: any;
   uid: string;
   email: string;

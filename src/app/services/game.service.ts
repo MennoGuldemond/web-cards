@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Card, CardType, GameState } from '@app/models';
+import { Card, CardType, GameState, ShipCard } from '@app/models';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -11,6 +11,8 @@ export class GameService {
     credits: 2,
     fuel: 5,
     turn: 1,
+    playerShips: [],
+    enemyShips: [],
   };
 
   private gameStateSubject = new BehaviorSubject<GameState>(this.initialState);
@@ -55,5 +57,36 @@ export class GameService {
   refuel(amount: number) {
     const currentState = this.getState();
     this.updateState({ fuel: currentState.fuel + amount });
+  }
+
+  resolveBattle() {
+    const state = this.getState();
+    // Sort ships by initiative
+    state.playerShips.sort((a, b) => b.ship.initiative - a.ship.initiative);
+    state.enemyShips.sort((a, b) => b.ship.initiative - a.ship.initiative);
+
+    // Resolve attacks
+    this.handleAttacks(state.playerShips, state.enemyShips);
+    this.handleAttacks(state.enemyShips, state.playerShips, true);
+  }
+
+  handleAttacks(attackingShips: ShipCard[], defendingShips: ShipCard[], targetArk = false) {
+    for (let attacker of attackingShips) {
+      if (defendingShips.length > 0) {
+        const target = defendingShips[0]; // Target the first available enemy ship
+        if (target) {
+          target.ship.health -= attacker.ship.attack;
+          console.log(`${attacker.title} attacks ${target.title} for ${attacker.ship.attack} damage!`);
+
+          // Remove ship if destroyed
+          if (target.ship.health <= 0) {
+            console.log(`${target.title} is destroyed!`);
+            defendingShips.shift();
+          }
+        } else if (targetArk) {
+          this.takeDamage(attacker.ship.attack);
+        }
+      }
+    }
   }
 }

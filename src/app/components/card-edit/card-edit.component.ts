@@ -8,6 +8,7 @@ import { Card, CardEffect, CardRarity, CardType, Effects, ShipCard } from '@app/
 import { CommonModule, KeyValuePipe } from '@angular/common';
 import { CardsService } from '@app/services';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SharedUtils } from '@app/utils';
 
 @Component({
   selector: 'app-card-edit',
@@ -28,6 +29,8 @@ export class CardEditComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router: Router = inject(Router);
 
+  initialCard: Card;
+
   cardId: string;
   form: FormGroup;
   cardTypeEnum = CardType;
@@ -42,9 +45,12 @@ export class CardEditComponent implements OnInit {
     this.cardId = this.route.snapshot.paramMap.get('id');
     if (this.cardId) {
       this.cardService.get(this.cardId).subscribe((card) => {
+        this.initialCard = { ...card };
+        delete this.initialCard.id;
         this.createForm(card);
       });
     } else {
+      this.initialCard = {} as Card;
       this.createForm({} as Card);
     }
   }
@@ -55,8 +61,7 @@ export class CardEditComponent implements OnInit {
       delete this.form.value.ship;
     }
     const toSave = this.cardId ? { ...this.form.value, id: this.cardId } : { ...this.form.value };
-    this.cardService.save(toSave).subscribe((savedCard) => {
-      console.log(savedCard);
+    this.cardService.save(toSave).subscribe(() => {
       this.router.navigate(['cards-overview']);
     });
   }
@@ -118,5 +123,9 @@ export class CardEditComponent implements OnInit {
       shipStats.removeControl('baseAttack');
       shipStats.removeControl('initiative');
     }
+  }
+
+  isFormChanged(): boolean {
+    return !SharedUtils.deepEqual(this.initialCard, this.form.value);
   }
 }

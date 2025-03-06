@@ -12,7 +12,7 @@ export enum CardRarity {
 }
 
 export enum Effects {
-  initiative = 'Initiative', // The higher the initiative, the earlier you get your turn in battle.
+  initiative = 'Initiative', // The lower the initiative, the earlier you get your turn in battle.
   health = 'Health', // Add max health
   stealth = 'Stealth', // Allows atticking without retaliation
   dodge = 'Dodge', // Decreases the chance of being hit in percentages
