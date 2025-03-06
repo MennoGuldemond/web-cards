@@ -126,6 +126,10 @@ export class CardEditComponent implements OnInit {
   }
 
   isFormChanged(): boolean {
-    return !SharedUtils.deepEqual(this.initialCard, this.form.value);
+    const formValue = { ...this.form.value };
+    if (formValue.type !== CardType.ship) {
+      delete formValue.ship;
+    }
+    return !SharedUtils.deepEqual(this.initialCard, formValue);
   }
 }
