@@ -1,44 +1,51 @@
+::ng-deep {
+  .battlefield app-card.cdk-drag-placeholder {
+    display: none;
+  }
+}
+
 .board {
   display: flex;
+  gap: 1em;
   flex-flow: column;
-  height: calc(100% - 5em);
+  height: calc(100vh - 5em);
+  width: 100%;
+  background: url('../../../../public/images/galaxy\ bg.jpeg') center center;
 
-  .enemy-field {
+  .battlefield {
     display: flex;
-    justify-content: center;
-    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+    height: 40%;
+    margin: 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
     padding: 10px;
-
-    .enemy-card {
-      transform: scale(0.5);
-      filter: drop-shadow(0 0 10px red);
-      transition: transform 0.2s ease-in-out;
-    }
-
-    .enemy-card:hover {
-      transform: scale(0.7);
-    }
   }
 
-  .field {
+  .player-side,
+  .enemy-side {
     display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 45%;
     justify-content: center;
-    min-height: 50%;
-    background-image: url('../../../../public/images/galaxy\ bg.jpeg');
-    background-size: 512px auto;
-    background-repeat: repeat;
-    background-color: black;
+    align-items: center;
+  }
+
+  .ship-preview {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent; // No card background
   }
 
   .hand {
     display: flex;
     justify-content: center;
     min-height: 50%;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)),
-      url('../../../../public/images/galaxy\ bg.jpeg');
-    background-size: 512px auto;
-    background-repeat: repeat;
-    background-color: black;
 
     app-card {
       cursor: grab;

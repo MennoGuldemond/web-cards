@@ -1,30 +1,53 @@
 <div class="board">
-  <!-- <div class="enemy-field">
-    @for (card of hand; track card) {
-    <app-card [card]="card" class="enemy-card"></app-card>
-    }
-  </div> -->
+  <div
+    id="battlefield"
+    class="battlefield"
+    cdkDropList
+    #battlefieldList="cdkDropList"
+    [cdkDropListData]="playerShips"
+    (cdkDropListDropped)="dropInBattlefield($event)"
+  >
+    <!-- Player Ships (Left Side) -->
+    <div class="player-side">
+      @if (draggingCard && isOverBattlefield && this.isShip(draggingCard)) {
+      <app-ship [shipCard]="getShipCard(draggingCard)"></app-ship>
+      } @for (ship of playerShips; track ship.id) {
+      <app-ship [shipCard]="getShipCard(ship)"></app-ship>
+      }
+    </div>
+
+    <!-- Enemy Ships (Right Side) -->
+    <div class="enemy-side">
+      @for (ship of enemyShips; track ship.id) {
+      <app-ship [shipCard]="getShipCard(ship)"></app-ship>
+      }
+    </div>
+  </div>
 
   <div
-    class="field"
+    id="hand"
+    class="hand"
     cdkDropList
-    #fieldList="cdkDropList"
-    [cdkDropListData]="cardsInPlay"
-    [cdkDropListConnectedTo]="[handList]"
-    (cdkDropListDropped)="dropInField($event)"
+    #handList="cdkDropList"
+    [cdkDropListData]="hand"
+    [cdkDropListConnectedTo]="[battlefieldList]"
   >
-    @for (card of cardsInPlay; track card.id) {
-    <app-card cdkDrag [cdkDragDisabled]="true" [card]="card"></app-card>
-    }
-  </div>
-  <div class="hand" cdkDropList #handList="cdkDropList" [cdkDropListData]="hand" [cdkDropListConnectedTo]="[fieldList]">
     @for (card of hand; track card.id) {
     <app-card
       cdkDrag
       [cdkDragData]="card"
+      (cdkDragStarted)="startDrag(card)"
+      (cdkDragEnded)="stopDrag()"
       [cdkDragDisabled]="(canAfford(card) | async) === false"
       [card]="card"
-    ></app-card>
+      (cdkDragEntered)="dragEnter($event)"
+    >
+      <!-- @if (this.isShip(card)) {
+      <ng-template cdkDragPreview>
+        <app-ship [shipCard]="getShipCard(card)"></app-ship>
+      </ng-template>
+      } -->
+    </app-card>
     }
   </div>
 </div>
