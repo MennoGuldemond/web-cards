@@ -35,11 +35,7 @@ export class AuthService {
     return from(this.auth.signOut());
   }
 
-  private getAuthUser(): Observable<User> {
-    return user(this.auth);
-  }
-
-  private updateUserData(user: User): Observable<AppUser> {
+  updateUserData(user: User): Observable<AppUser> {
     const docRef = doc(this.firestore, 'users', user.uid);
 
     return from(getDoc(docRef)).pipe(
@@ -59,5 +55,9 @@ export class AuthService {
         return from(setDoc(docRef, userData)).pipe(map(() => userData));
       })
     );
+  }
+
+  private getAuthUser(): Observable<User> {
+    return user(this.auth);
   }
 }

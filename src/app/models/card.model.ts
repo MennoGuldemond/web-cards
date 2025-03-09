@@ -7,7 +7,7 @@ export interface Card {
   effects: CardEffect[];
   imageUrl: string;
   cost: number;
-  type: CardType;
+  cardType: CardType;
   rarity: CardRarity;
 }
 

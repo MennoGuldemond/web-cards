@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { Card, CardEffect, CardType, ShipCard } from '@app/models';
-import { EffectResolver } from '@app/utils';
+import { Card, CardEffect, ShipCard } from '@app/models';
+import { asShip, EffectResolver, isShip } from '@app/utils';
 
 @Component({
   selector: 'app-card',
@@ -16,14 +16,12 @@ export class CardComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.isShip()) {
-      let shipCard = this.card as ShipCard;
-      shipCard.ship = { ...shipCard.ship, health: shipCard.ship.maxHealth, attack: shipCard.ship.baseAttack };
-      this.card = shipCard;
+      this.card = asShip(this.card);
     }
   }
 
   isShip(): boolean {
-    return this.card.type === CardType.ship;
+    return isShip(this.card);
   }
 
   getShipData() {
@@ -31,7 +29,7 @@ export class CardComponent implements OnInit {
   }
 
   getCardStyle(): string {
-    return `${this.card.type.toLowerCase()} ${this.card.rarity.toLowerCase()}`;
+    return `${this.card.cardType.toLowerCase()} ${this.card.rarity.toLowerCase()}`;
   }
 
   getEffectDescription(effect: CardEffect): string {

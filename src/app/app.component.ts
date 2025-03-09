@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MenuBarComponent } from './components';
 import { RouterOutlet } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { getCards, getUser } from './store/actions';
 
 @Component({
   selector: 'app-root',
@@ -9,4 +11,11 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {}
+export class AppComponent implements OnInit {
+  store = inject(Store);
+
+  ngOnInit(): void {
+    this.store.dispatch(getUser());
+    this.store.dispatch(getCards());
+  }
+}

@@ -1,10 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { User } from '@angular/fire/auth';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { AppUser } from '@app/models';
 import { AuthService } from '@app/services';
+import { login, logout } from '@app/store/actions';
+import { selectUser } from '@app/store/selectors';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -14,25 +17,24 @@ import { Observable } from 'rxjs';
   styleUrl: './user-menu.component.scss',
 })
 export class UserMenuComponent {
+  store = inject(Store);
   authService: AuthService = inject(AuthService);
 
-  user$: Observable<AppUser>;
+  user$: Observable<User>;
 
   currentTheme$: Observable<string>;
 
-  // constructor(private router: Router) {}
-
   ngOnInit() {
-    this.user$ = this.authService.appUser$;
+    this.user$ = this.store.select(selectUser);
     // this.currentTheme$ = this.store.select(selectTheme);
   }
 
   login() {
-    this.authService.googleSignin().subscribe();
+    this.store.dispatch(login());
   }
 
   logout() {
-    this.authService.signOut().subscribe();
+    this.store.dispatch(logout());
   }
 
   navigateToAccount() {

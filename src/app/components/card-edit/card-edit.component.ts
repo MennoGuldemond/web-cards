@@ -87,7 +87,7 @@ export class CardEditComponent implements OnInit {
       description: new FormControl(card?.description, [Validators.required, Validators.maxLength(100)]),
       imageUrl: new FormControl(card?.imageUrl, [Validators.required]),
       cost: new FormControl(card?.cost || 1, [Validators.required, Validators.min(0), Validators.max(10)]),
-      type: new FormControl(card?.type || CardType.ship, [Validators.required]),
+      type: new FormControl(card?.cardType || CardType.ship, [Validators.required]),
       rarity: new FormControl(card?.rarity || CardRarity.common, [Validators.required]),
       effects: new FormArray(card?.effects ? card.effects.map((effect) => this.createEffectGroup(effect)) : []),
       ship: new FormGroup({

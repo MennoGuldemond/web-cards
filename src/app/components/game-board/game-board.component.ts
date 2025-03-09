@@ -1,11 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { CdkDrag, CdkDragPreview, CdkDropList, transferArrayItem } from '@angular/cdk/drag-drop';
-import { CardsService, GameService } from '@app/services';
-import { Card, CardType, GameState, ShipCard } from '@app/models';
+import { Store } from '@ngrx/store';
 import { map, Observable, take } from 'rxjs';
+import { Card, ShipCard } from '@app/models';
+import { GameState, selectCards, selectGameState } from '@app/store/selectors';
+import { playCard } from '@app/store/actions';
 import { CardComponent } from '../card/card.component';
 import { ShipComponent } from '../ship/ship.component';
+import { asShip, isShip } from '@app/utils';
 
 @Component({
   selector: 'app-game-board',
@@ -14,8 +17,7 @@ import { ShipComponent } from '../ship/ship.component';
   styleUrl: './game-board.component.scss',
 })
 export class GameBoardComponent implements OnInit {
-  cardService: CardsService = inject(CardsService);
-  gameService: GameService = inject(GameService);
+  store = inject(Store);
 
   gameState$: Observable<GameState>;
   hand: Card[] = [];
@@ -26,8 +28,8 @@ export class GameBoardComponent implements OnInit {
   isOverBattlefield = false;
 
   ngOnInit() {
-    this.cardService.getAll().subscribe((cards) => (this.hand = cards));
-    this.gameState$ = this.gameService.gameState$;
+    this.store.select(selectCards).subscribe((cards) => (this.hand = cards));
+    this.gameState$ = this.store.select(selectGameState);
   }
 
   startDrag(card: Card) {
@@ -47,7 +49,7 @@ export class GameBoardComponent implements OnInit {
     const card = event.item.data;
     if (this.isShip(card)) {
       transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
-      this.gameService.playCard(card);
+      this.store.dispatch(playCard(card));
     }
   }
 
@@ -65,13 +67,10 @@ export class GameBoardComponent implements OnInit {
   }
 
   isShip(card: Card): boolean {
-    return card.type === CardType.ship;
+    return isShip(card);
   }
 
   getShipCard(card: Card): ShipCard {
-    if (this.isShip(card)) {
-      return card as ShipCard;
-    }
-    return null;
+    return asShip(card);
   }
 }
