@@ -8,5 +8,6 @@ export interface ShipCard extends Card {
     health: number;
     baseInitiative: number;
     initiative: number;
+    transparentImageUrl: string;
   };
 }

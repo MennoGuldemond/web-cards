@@ -91,6 +91,7 @@ export class CardEditComponent implements OnInit {
       rarity: new FormControl(card?.rarity || CardRarity.common, [Validators.required]),
       effects: new FormArray(card?.effects ? card.effects.map((effect) => this.createEffectGroup(effect)) : []),
       ship: new FormGroup({
+        transparentImageUrl: new FormControl(card['ship']?.transparentImageUrl, [Validators.required]),
         maxHealth: new FormControl(card['ship']?.maxHealth || 1, [Validators.min(1)]),
         baseAttack: new FormControl(card['ship']?.baseAttack || 1, [Validators.min(0)]),
         initiative: new FormControl(card['ship']?.initiative || 50, [Validators.min(0)]),

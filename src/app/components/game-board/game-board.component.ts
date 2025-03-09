@@ -41,8 +41,6 @@ export class GameBoardComponent implements OnInit {
 
   dragEnter(event: any) {
     this.isOverBattlefield = event?.container?.id === 'battlefield';
-    // if (this.isShip(card)) {
-    // }
   }
 
   dropInBattlefield(event: any) {
