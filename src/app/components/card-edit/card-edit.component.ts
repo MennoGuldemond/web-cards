@@ -6,9 +6,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { Card, CardEffect, CardRarity, CardType, Effects, ShipCard } from '@app/models';
 import { CommonModule, KeyValuePipe } from '@angular/common';
-import { CardsService } from '@app/services';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SharedUtils } from '@app/utils';
+import { Store } from '@ngrx/store';
+import { saveCard } from '@app/store/actions';
+import { selectCardById } from '@app/store/selectors';
 
 @Component({
   selector: 'app-card-edit',
@@ -25,9 +27,8 @@ import { SharedUtils } from '@app/utils';
   styleUrl: './card-edit.component.scss',
 })
 export class CardEditComponent implements OnInit {
-  private cardService: CardsService = inject(CardsService);
+  private store = inject(Store);
   private route = inject(ActivatedRoute);
-  private router: Router = inject(Router);
 
   initialCard: Card;
 
@@ -44,7 +45,7 @@ export class CardEditComponent implements OnInit {
   ngOnInit() {
     this.cardId = this.route.snapshot.paramMap.get('id');
     if (this.cardId) {
-      this.cardService.get(this.cardId).subscribe((card) => {
+      this.store.select(selectCardById(this.cardId)).subscribe((card) => {
         this.initialCard = { ...card };
         delete this.initialCard.id;
         this.createForm(card);
@@ -56,14 +57,12 @@ export class CardEditComponent implements OnInit {
   }
 
   save() {
-    if (this.form.get('type').value !== CardType.ship) {
+    if (this.form.get('cardType').value !== CardType.ship) {
       // Don't save ship data when it's not a ship
       delete this.form.value.ship;
     }
     const toSave = this.cardId ? { ...this.form.value, id: this.cardId } : { ...this.form.value };
-    this.cardService.save(toSave).subscribe(() => {
-      this.router.navigate(['cards-overview']);
-    });
+    this.store.dispatch(saveCard(toSave));
   }
 
   addEffect(): void {
@@ -87,18 +86,18 @@ export class CardEditComponent implements OnInit {
       description: new FormControl(card?.description, [Validators.required, Validators.maxLength(100)]),
       imageUrl: new FormControl(card?.imageUrl, [Validators.required]),
       cost: new FormControl(card?.cost || 1, [Validators.required, Validators.min(0), Validators.max(10)]),
-      type: new FormControl(card?.cardType || CardType.ship, [Validators.required]),
+      cardType: new FormControl(card?.cardType || CardType.ship, [Validators.required]),
       rarity: new FormControl(card?.rarity || CardRarity.common, [Validators.required]),
       effects: new FormArray(card?.effects ? card.effects.map((effect) => this.createEffectGroup(effect)) : []),
       ship: new FormGroup({
-        transparentImageUrl: new FormControl(card['ship']?.transparentImageUrl, [Validators.required]),
+        transparentImageUrl: new FormControl(card['ship']?.transparentImageUrl),
         maxHealth: new FormControl(card['ship']?.maxHealth || 1, [Validators.min(1)]),
         baseAttack: new FormControl(card['ship']?.baseAttack || 1, [Validators.min(0)]),
         initiative: new FormControl(card['ship']?.initiative || 50, [Validators.min(0)]),
       }),
     });
 
-    this.form.get('type').valueChanges.subscribe((selectedType) => {
+    this.form.get('cardType').valueChanges.subscribe((selectedType) => {
       this.updateShipStats(selectedType, card);
     });
   }
@@ -107,6 +106,10 @@ export class CardEditComponent implements OnInit {
     const shipStats = this.form.get('ship') as FormGroup;
     if (type === CardType.ship) {
       const shipData = (card as ShipCard).ship;
+      shipStats.addControl(
+        'transparentImageUrl',
+        new FormControl(card['ship']?.transparentImageUrl, [Validators.required])
+      );
       shipStats.addControl(
         'maxHealth',
         new FormControl(shipData?.maxHealth || 1, [Validators.required, Validators.min(1)])
@@ -120,6 +123,7 @@ export class CardEditComponent implements OnInit {
         new FormControl(shipData?.initiative || 50, [Validators.required, Validators.min(0)])
       );
     } else {
+      shipStats.removeControl('transparentImageUrl');
       shipStats.removeControl('maxHealth');
       shipStats.removeControl('baseAttack');
       shipStats.removeControl('initiative');
@@ -128,7 +132,7 @@ export class CardEditComponent implements OnInit {
 
   isFormChanged(): boolean {
     const formValue = { ...this.form.value };
-    if (formValue.type !== CardType.ship) {
+    if (formValue.cardType !== CardType.ship) {
       delete formValue.ship;
     }
     return !SharedUtils.deepEqual(this.initialCard, formValue);

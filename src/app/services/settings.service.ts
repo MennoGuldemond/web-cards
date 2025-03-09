@@ -17,11 +17,7 @@ export class SettingsService {
   get(): Observable<Settings> {
     return collectionData(this.settingsCollection).pipe(
       map((x) => {
-        const settings = x[0] as Settings;
-        const storedSettings = this.getFromLocalStorage();
-        settings.cardsOutdated = storedSettings.version !== settings.version;
-        this.saveToLocalStorage(settings);
-        return settings;
+        return x[0] as Settings;
       })
     ) as Observable<Settings>;
   }
@@ -40,23 +36,5 @@ export class SettingsService {
         return from(setDoc(settingsRef, updatedSettings));
       })
     );
-  }
-
-  private saveToLocalStorage(settings: Settings) {
-    try {
-      localStorage.setItem('settings', JSON.stringify(settings));
-    } catch (error) {
-      console.error('Error saving settings to localStorage', error);
-    }
-  }
-
-  private getFromLocalStorage(): Settings {
-    try {
-      const data = localStorage.getItem('settings');
-      return data ? (JSON.parse(data) as Settings) : null;
-    } catch (error) {
-      console.error('Error retrieving settings from localStorage', error);
-      return null;
-    }
   }
 }

@@ -16,7 +16,7 @@
       </mat-form-field>
       <mat-form-field>
         <mat-label>Type</mat-label>
-        <mat-select formControlName="type">
+        <mat-select formControlName="cardType">
           @for (cardType of cardTypeEnum | keyvalue; track cardType) {
           <mat-option [value]="cardType.value">
             {{ cardType.key }}
@@ -71,7 +71,7 @@
       </div>
     </div>
   </div>
-  @if (form.get('type')?.value === cardTypeEnum.ship) {
+  @if (form.get('cardType')?.value === cardTypeEnum.ship) {
   <div class="input-columns">
     <div class="column" formGroupName="ship">
       <h3>Ship Stats</h3>
