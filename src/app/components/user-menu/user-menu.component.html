@@ -1,8 +1,9 @@
 @if (user$ | async; as user) {
 <div fxLayout="row" class="avatar-circle">
-  <img [matMenuTriggerFor]="userMenu" [src]="user.photoURL" alt="Profiel foto" />
+  <img [matMenuTriggerFor]="userMenu" [src]="user.photoURL" referrerPolicy="no-referrer" alt="Profiel foto" />
   <mat-menu #userMenu="matMenu">
     <button mat-menu-item (click)="navigateToAccount()">My Account</button>
+    <button mat-menu-item (click)="navigateToCardsOverview()">Card Overview</button>
     <button mat-menu-item (click)="logout()">Logout</button>
     <button mat-menu-item [matMenuTriggerFor]="themeMenu">Thema</button>
     <mat-menu #themeMenu="matMenu">

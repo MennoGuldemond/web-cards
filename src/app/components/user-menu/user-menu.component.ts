@@ -4,6 +4,7 @@ import { User } from '@angular/fire/auth';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { Router } from '@angular/router';
 import { AuthService } from '@app/services';
 import { login, logout } from '@app/store/actions';
 import { selectUser } from '@app/store/selectors';
@@ -18,7 +19,8 @@ import { Observable } from 'rxjs';
 })
 export class UserMenuComponent {
   store = inject(Store);
-  authService: AuthService = inject(AuthService);
+  authService = inject(AuthService);
+  router = inject(Router);
 
   user$: Observable<User>;
 
@@ -39,6 +41,10 @@ export class UserMenuComponent {
 
   navigateToAccount() {
     // this.router.navigate(['profiel']);
+  }
+
+  navigateToCardsOverview() {
+    this.router.navigate(['cards-overview']);
   }
 
   setTheme(theme: string) {
