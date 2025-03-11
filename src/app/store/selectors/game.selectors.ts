@@ -1,4 +1,4 @@
-import { ShipCard } from '@app/models';
+import { Card, ShipCard } from '@app/models';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 export interface GameState {
@@ -8,6 +8,7 @@ export interface GameState {
   turn: number;
   playerShips: ShipCard[];
   enemyShips: ShipCard[];
+  hand: Card[];
 }
 
 export const selectGameState = createFeatureSelector<GameState>('game');
@@ -17,3 +18,4 @@ export const selectFuel = createSelector(selectGameState, (state) => state.fuel)
 export const selectTurn = createSelector(selectGameState, (state) => state.turn);
 export const selectPlayerShips = createSelector(selectGameState, (state) => state.playerShips);
 export const selectEnemyShips = createSelector(selectGameState, (state) => state.enemyShips);
+export const selectHand = createSelector(selectGameState, (state) => state.hand);

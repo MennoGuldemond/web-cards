@@ -1,53 +1,59 @@
 <div class="board">
-  <div
-    id="battlefield"
-    class="battlefield"
-    cdkDropList
-    #battlefieldList="cdkDropList"
-    [cdkDropListData]="playerShips"
-    (cdkDropListDropped)="dropInBattlefield($event)"
-  >
+  <div id="battlefield" class="battlefield" (click)="battlefieldClicked()">
     <!-- Player Ships (Left Side) -->
     <div class="player-side">
-      @if (draggingCard && isOverBattlefield && this.isShip(draggingCard)) {
-      <app-ship [shipCard]="getShipCard(draggingCard)"></app-ship>
-      } @for (ship of playerShips; track ship.id) {
+      @if (selectedCard && isOverBattlefield && this.isShip(selectedCard)) {
+      <app-ship #shipElement [shipCard]="getShipCard(selectedCard)"></app-ship>
+      } @for (ship of playerShips$ | async; track ship.id) {
       <app-ship [shipCard]="getShipCard(ship)"></app-ship>
       }
     </div>
 
     <!-- Enemy Ships (Right Side) -->
     <div class="enemy-side">
-      @for (ship of enemyShips; track ship.id) {
+      @for (ship of enemyShips$ | async; track ship.id) {
       <app-ship [shipCard]="getShipCard(ship)"></app-ship>
       }
     </div>
   </div>
 
-  <div
-    id="hand"
-    class="hand"
-    cdkDropList
-    #handList="cdkDropList"
-    [cdkDropListData]="hand"
-    [cdkDropListConnectedTo]="[battlefieldList]"
-  >
-    @for (card of hand; track card.id) {
-    <app-card
-      cdkDrag
-      [cdkDragData]="card"
-      (cdkDragStarted)="startDrag(card)"
-      (cdkDragEnded)="stopDrag()"
-      [cdkDragDisabled]="(canAfford(card) | async) === false"
-      [card]="card"
-      (cdkDragEntered)="dragEnter($event)"
-    >
-      <!-- @if (this.isShip(card)) {
-      <ng-template cdkDragPreview>
-        <app-ship [shipCard]="getShipCard(card)"></app-ship>
-      </ng-template>
-      } -->
+  <div id="hand" class="hand">
+    @for (card of hand$ | async; track card.id) {
+    <app-card [card]="card" (click)="selectCard($event, card)" [ngClass]="{ disabled: !(canAfford(card) | async) }">
     </app-card>
     }
   </div>
 </div>
+
+<svg class="arrow-layer" *ngIf="arrowVisible">
+  <defs>
+    <!-- Glow effect -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feComponentTransfer in="SourceAlpha">
+        <feFuncA type="table" tableValues="0 1" />
+      </feComponentTransfer>
+      <feGaussianBlur stdDeviation="3" result="blurred" />
+      <feMerge>
+        <feMergeNode in="blurred" />
+        <feMergeNode in="SourceAlpha" />
+      </feMerge>
+    </filter>
+
+    <!-- Arrowhead marker -->
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="yellow" />
+    </marker>
+  </defs>
+
+  <!-- Line with glowing effect -->
+  <line
+    [attr.x1]="arrow.x1"
+    [attr.y1]="arrow.y1"
+    [attr.x2]="arrow.x2"
+    [attr.y2]="arrow.y2"
+    stroke="cyan"
+    stroke-width="3"
+    filter="url(#glow)"
+    marker-end="url(#arrowhead)"
+  />
+</svg>
