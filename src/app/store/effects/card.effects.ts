@@ -71,14 +71,12 @@ export class CardEffects {
   saveCard$ = createEffect(() =>
     this.actions$.pipe(
       ofType(saveCard),
-      switchMap((action: any) => {
+      switchMap((action) => {
         this.store.dispatch(updateVersion());
-        // TODO: solve this action and card being one object.
-        let card = { ...action };
-        delete card.type;
-        return this.cardService.save(card).pipe(
+        delete action.card.cardType;
+        return this.cardService.save(action.card).pipe(
           map(() => {
-            return { type: CARD_SET_CARD, card: card };
+            return { type: CARD_SET_CARD, card: action.card };
           })
         );
       })

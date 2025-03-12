@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
-import { playCard, refuel, spendCredits, takeDamage, useFuel } from '../actions';
+import { addToHand, playCard, refuel, spendCredits, takeDamage, useFuel } from '../actions';
 import { GameState } from '../selectors';
+import { asShip, isShip } from '@app/utils';
 
 export const initialGameState: GameState = {
   arkHealth: 20,
@@ -9,12 +10,22 @@ export const initialGameState: GameState = {
   turn: 1,
   playerShips: [],
   enemyShips: [],
+  hand: [],
 };
 
 const _gameReducer = createReducer(
   initialGameState,
   on(playCard, (state, action) => {
-    return { ...state, cards: [...state.playerShips, action.card] };
+    if (isShip(action.card)) {
+      const playedCard = asShip(action.card);
+      let handCopy = [...state.hand];
+      handCopy.splice(handCopy.indexOf(playedCard), 1);
+      return { ...state, playerShips: [...state.playerShips, playedCard], hand: handCopy };
+    }
+    return { ...state };
+  }),
+  on(addToHand, (state, action) => {
+    return { ...state, hand: [...state.hand, ...action.cards] };
   }),
   on(takeDamage, (state, action) => {
     return { ...state, arkHealth: state.arkHealth - action.amount };

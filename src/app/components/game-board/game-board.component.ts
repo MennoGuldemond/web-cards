@@ -1,18 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { CdkDrag, CdkDragPreview, CdkDropList, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDropList, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Store } from '@ngrx/store';
 import { map, Observable, take } from 'rxjs';
 import { Card, ShipCard } from '@app/models';
-import { GameState, selectCards, selectGameState } from '@app/store/selectors';
-import { playCard } from '@app/store/actions';
+import { GameState, selectEnemyShips, selectGameState, selectHand, selectPlayerShips } from '@app/store/selectors';
+import { drawCards, playCard } from '@app/store/actions';
 import { CardComponent } from '../card/card.component';
 import { ShipComponent } from '../ship/ship.component';
 import { asShip, isShip } from '@app/utils';
 
 @Component({
   selector: 'app-game-board',
-  imports: [CommonModule, CardComponent, ShipComponent, CdkDrag, CdkDropList, CdkDragPreview],
+  imports: [CommonModule, CardComponent, ShipComponent, CdkDrag, CdkDropList],
   templateUrl: './game-board.component.html',
   styleUrl: './game-board.component.scss',
 })
@@ -20,16 +20,23 @@ export class GameBoardComponent implements OnInit {
   store = inject(Store);
 
   gameState$: Observable<GameState>;
-  hand: Card[] = [];
-  playerShips: Card[] = [];
-  enemyShips: Card[] = [];
+  hand$: Observable<Card[]>;
+  playerShips$: Observable<Card[]>;
+  enemyShips$: Observable<Card[]>;
 
   draggingCard: Card = null;
   isOverBattlefield = false;
 
-  ngOnInit() {
-    this.store.select(selectCards).subscribe((cards) => (this.hand = cards));
+  constructor() {
     this.gameState$ = this.store.select(selectGameState);
+    this.hand$ = this.store.select(selectHand);
+    this.playerShips$ = this.store.select(selectPlayerShips);
+    this.enemyShips$ = this.store.select(selectEnemyShips);
+    this.gameState$ = this.store.select(selectGameState);
+  }
+
+  ngOnInit() {
+    this.store.dispatch(drawCards({ amount: 5 }));
   }
 
   startDrag(card: Card) {
@@ -48,8 +55,8 @@ export class GameBoardComponent implements OnInit {
   dropInBattlefield(event: any) {
     const card = event.item.data;
     if (this.isShip(card)) {
-      transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
-      this.store.dispatch(playCard(card));
+      // transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+      this.store.dispatch(playCard({ card: card }));
     }
   }
 

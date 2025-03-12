@@ -62,7 +62,7 @@ export class CardEditComponent implements OnInit {
       delete this.form.value.ship;
     }
     const toSave = this.cardId ? { ...this.form.value, id: this.cardId } : { ...this.form.value };
-    this.store.dispatch(saveCard(toSave));
+    this.store.dispatch(saveCard({ card: toSave }));
   }
 
   addEffect(): void {

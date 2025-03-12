@@ -4,21 +4,21 @@
     class="battlefield"
     cdkDropList
     #battlefieldList="cdkDropList"
-    [cdkDropListData]="playerShips"
+    [cdkDropListData]="playerShips$ | async"
     (cdkDropListDropped)="dropInBattlefield($event)"
   >
     <!-- Player Ships (Left Side) -->
     <div class="player-side">
       @if (draggingCard && isOverBattlefield && this.isShip(draggingCard)) {
       <app-ship [shipCard]="getShipCard(draggingCard)"></app-ship>
-      } @for (ship of playerShips; track ship.id) {
+      } @for (ship of playerShips$ | async; track ship.id) {
       <app-ship [shipCard]="getShipCard(ship)"></app-ship>
       }
     </div>
 
     <!-- Enemy Ships (Right Side) -->
     <div class="enemy-side">
-      @for (ship of enemyShips; track ship.id) {
+      @for (ship of enemyShips$ | async; track ship.id) {
       <app-ship [shipCard]="getShipCard(ship)"></app-ship>
       }
     </div>
@@ -29,10 +29,10 @@
     class="hand"
     cdkDropList
     #handList="cdkDropList"
-    [cdkDropListData]="hand"
+    [cdkDropListData]="hand$ | async"
     [cdkDropListConnectedTo]="[battlefieldList]"
   >
-    @for (card of hand; track card.id) {
+    @for (card of hand$ | async; track card.id) {
     <app-card
       cdkDrag
       [cdkDragData]="card"
