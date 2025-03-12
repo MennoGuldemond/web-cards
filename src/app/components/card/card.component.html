@@ -31,7 +31,15 @@
     </div>
   </mat-card-footer>
 
-  @if (showTooltip) {
-  <app-card-tooltip [card]="card"></app-card-tooltip>
-  }
+  @if (showTooltip) { @if (showTooltip) {
+  <div class="tooltip">
+    <h3>{{ card.title }}</h3>
+    <p>{{ card.description }}</p>
+    @for (effect of card.effects; track effect.name) {
+    <p>
+      <strong>{{ effect.name }}: </strong>{{ getEffectDescription(effect) }}
+    </p>
+    }
+  </div>
+  } }
 </mat-card>

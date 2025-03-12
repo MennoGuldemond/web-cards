@@ -1,13 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { Card, ShipCard } from '@app/models';
-import { asShip, isShip } from '@app/utils';
-import { CardTooltipComponent } from '../card-tooltip/card-tooltip.component';
+import { Card, CardEffect, ShipCard } from '@app/models';
+import { asShip, EffectResolver, isShip } from '@app/utils';
 
 @Component({
   selector: 'app-card',
-  imports: [CommonModule, MatCardModule, CardTooltipComponent],
+  imports: [CommonModule, MatCardModule],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss',
 })
@@ -31,5 +30,9 @@ export class CardComponent implements OnInit {
 
   getCardStyle(): string {
     return `${this.card.cardType.toLowerCase()} ${this.card.rarity.toLowerCase()}`;
+  }
+
+  getEffectDescription(effect: CardEffect): string {
+    return EffectResolver.getDescription(effect);
   }
 }

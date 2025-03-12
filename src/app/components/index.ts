@@ -5,4 +5,3 @@ export * from './menu-bar/menu-bar.component';
 export * from './game-board/game-board.component';
 export * from './user-menu/user-menu.component';
 export * from './ship/ship.component';
-export * from './card-tooltip/card-tooltip.component';
