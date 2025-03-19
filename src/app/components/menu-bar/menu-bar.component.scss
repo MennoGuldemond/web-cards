@@ -5,8 +5,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  background: rgba(15, 15, 30, 0.8); /* Dark space-blue */
-  border-bottom: 2px solid rgba(0, 255, 255, 0.4); /* Neon cyan border */
+  background: vars.$menu-bar-color;
   box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
 }
 

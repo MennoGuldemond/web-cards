@@ -1,16 +1,56 @@
+@use '../../../vars';
+
 ::ng-deep {
-  .battlefield app-card.cdk-drag-placeholder {
-    display: none;
+  .battlefield,
+  .salvage,
+  .use {
+    & app-card.cdk-drag-placeholder {
+      display: none;
+    }
   }
 }
 
 .board {
   display: flex;
-  gap: 1em;
-  flex-flow: column;
+  justify-content: space-between;
+  gap: 2rem;
   height: calc(100vh - 5em);
   width: 100%;
   background: url('../../../../public/images/galaxy\ bg.jpeg') center center;
+
+  .drop-areas {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1rem;
+    > div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid;
+      border-radius: 1em;
+      flex: 1;
+      width: 10ch;
+      padding: 2em;
+    }
+    .use {
+      border-color: vars.$space-lime;
+      color: vars.$space-lime;
+      background-color: vars.$space-lime-transparant;
+    }
+    .salvage {
+      border-color: vars.$space-red;
+      color: vars.$space-red;
+      background-color: vars.$space-red-transparent;
+    }
+  }
+}
+
+.play-area {
+  display: flex;
+  flex: 1;
+  gap: 1em;
+  flex-flow: column;
 
   .battlefield {
     display: flex;
@@ -44,7 +84,7 @@
 
   .hand {
     display: flex;
-    justify-content: center;
+    justify-content: right;
     min-height: 50%;
 
     app-card {

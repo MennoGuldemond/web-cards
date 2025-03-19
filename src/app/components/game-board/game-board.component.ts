@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { CdkDrag, CdkDropList, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { Store } from '@ngrx/store';
 import { map, Observable, take } from 'rxjs';
 import { Card, ShipCard } from '@app/models';
 import { GameState, selectEnemyShips, selectGameState, selectHand, selectPlayerShips } from '@app/store/selectors';
-import { drawCards, playCard } from '@app/store/actions';
+import { discard, drawCards, playCard } from '@app/store/actions';
 import { CardComponent } from '../card/card.component';
 import { ShipComponent } from '../ship/ship.component';
 import { asShip, isShip } from '@app/utils';
@@ -52,12 +52,19 @@ export class GameBoardComponent implements OnInit {
     this.isOverBattlefield = event?.container?.id === 'battlefield';
   }
 
-  dropInBattlefield(event: any) {
+  dropInBattlefield(event: CdkDragDrop<any, any, any>) {
     const card = event.item.data;
     if (this.isShip(card)) {
-      // transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
       this.store.dispatch(playCard({ card: card }));
     }
+  }
+
+  dropInUse(event: CdkDragDrop<any, any, any>) {
+    console.log('dropped in use', event);
+  }
+
+  dropInSalvage(event: CdkDragDrop<any, any, any>) {
+    this.store.dispatch(discard({ card: event.item.data }));
   }
 
   canAfford(card: Card): Observable<boolean> {

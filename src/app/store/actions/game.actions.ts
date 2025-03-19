@@ -4,6 +4,7 @@ import { createAction, props } from '@ngrx/store';
 export const GAME_DRAW_CARDS = '[Game] drawCards';
 export const GAME_PLAY_CARD = '[Game] playCard';
 export const GAME_ADD_TO_HAND = '[Game] addToHand';
+export const GAME_DISCARD = '[Game] discard';
 
 export const GAME_TAKE_DAMAGE = '[Game] takeDamage';
 export const GAME_SPEND_CREDITS = '[Game] spendCredits';
@@ -14,6 +15,7 @@ export const GAME_RESOLVE_BATTLE = '[Game] resolveBattle';
 export const drawCards = createAction(GAME_DRAW_CARDS, props<{ amount: number }>());
 export const playCard = createAction(GAME_PLAY_CARD, props<{ card: Card }>());
 export const addToHand = createAction(GAME_ADD_TO_HAND, props<{ cards: Card[] }>());
+export const discard = createAction(GAME_DISCARD, props<{ card: Card }>());
 
 export const takeDamage = createAction(GAME_TAKE_DAMAGE, props<{ amount: number }>());
 export const spendCredits = createAction(GAME_SPEND_CREDITS, props<{ amount: number }>());

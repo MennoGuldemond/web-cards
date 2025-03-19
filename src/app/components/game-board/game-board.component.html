@@ -1,53 +1,69 @@
 <div class="board">
-  <div
-    id="battlefield"
-    class="battlefield"
-    cdkDropList
-    #battlefieldList="cdkDropList"
-    [cdkDropListData]="playerShips$ | async"
-    (cdkDropListDropped)="dropInBattlefield($event)"
-  >
-    <!-- Player Ships (Left Side) -->
-    <div class="player-side">
-      @if (draggingCard && isOverBattlefield && this.isShip(draggingCard)) {
-      <app-ship [shipCard]="getShipCard(draggingCard)"></app-ship>
-      } @for (ship of playerShips$ | async; track ship.id) {
-      <app-ship [shipCard]="getShipCard(ship)"></app-ship>
-      }
+  <div class="drop-areas">
+    <div
+      id="salvage"
+      class="salvage"
+      cdkDropList
+      #salvageList="cdkDropList"
+      (cdkDropListDropped)="dropInSalvage($event)"
+    >
+      <h2>Salvage</h2>
     </div>
-
-    <!-- Enemy Ships (Right Side) -->
-    <div class="enemy-side">
-      @for (ship of enemyShips$ | async; track ship.id) {
-      <app-ship [shipCard]="getShipCard(ship)"></app-ship>
-      }
+    <div id="use" class="use" cdkDropList #useList="cdkDropList" (cdkDropListDropped)="dropInUse($event)">
+      <h2>Use</h2>
     </div>
   </div>
-
-  <div
-    id="hand"
-    class="hand"
-    cdkDropList
-    #handList="cdkDropList"
-    [cdkDropListData]="hand$ | async"
-    [cdkDropListConnectedTo]="[battlefieldList]"
-  >
-    @for (card of hand$ | async; track card.id) {
-    <app-card
-      cdkDrag
-      [cdkDragData]="card"
-      (cdkDragStarted)="startDrag(card)"
-      (cdkDragEnded)="stopDrag()"
-      [cdkDragDisabled]="(canAfford(card) | async) === false"
-      [card]="card"
-      (cdkDragEntered)="dragEnter($event)"
+  <div class="play-area">
+    <div
+      id="battlefield"
+      class="battlefield"
+      cdkDropList
+      #battlefieldList="cdkDropList"
+      [cdkDropListData]="playerShips$ | async"
+      (cdkDropListDropped)="dropInBattlefield($event)"
     >
-      <!-- @if (this.isShip(card)) {
-      <ng-template cdkDragPreview>
-        <app-ship [shipCard]="getShipCard(card)"></app-ship>
-      </ng-template>
-      } -->
-    </app-card>
-    }
+      <!-- Player Ships (Left Side) -->
+      <div class="player-side">
+        @if (draggingCard && isOverBattlefield && this.isShip(draggingCard)) {
+        <app-ship [shipCard]="getShipCard(draggingCard)"></app-ship>
+        } @for (ship of playerShips$ | async; track ship.id) {
+        <app-ship [shipCard]="getShipCard(ship)"></app-ship>
+        }
+      </div>
+
+      <!-- Enemy Ships (Right Side) -->
+      <div class="enemy-side">
+        @for (ship of enemyShips$ | async; track ship.id) {
+        <app-ship [shipCard]="getShipCard(ship)"></app-ship>
+        }
+      </div>
+    </div>
+
+    <div
+      id="hand"
+      class="hand"
+      cdkDropList
+      #handList="cdkDropList"
+      [cdkDropListData]="hand$ | async"
+      [cdkDropListConnectedTo]="[battlefieldList, salvageList, useList]"
+    >
+      @for (card of hand$ | async; track card.id) {
+      <app-card
+        cdkDrag
+        [cdkDragData]="card"
+        (cdkDragStarted)="startDrag(card)"
+        (cdkDragEnded)="stopDrag()"
+        [cdkDragDisabled]="(canAfford(card) | async) === false"
+        [card]="card"
+        (cdkDragEntered)="dragEnter($event)"
+      >
+        <!-- @if (this.isShip(card)) {
+        <ng-template cdkDragPreview>
+          <app-ship [shipCard]="getShipCard(card)"></app-ship>
+        </ng-template>
+        } -->
+      </app-card>
+      }
+    </div>
   </div>
 </div>

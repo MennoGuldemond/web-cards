@@ -6,7 +6,11 @@ $card-cyan: #0ff;
 $card-semi-black: #212121;
 
 // App
-$menu-bar-color: #1c0643;
+$menu-bar-color: rgba(15, 15, 30, 0.8);
+$space-red: rgb(255, 47, 20);
+$space-red-transparent: rgba($space-red, 0.1);
+$space-lime: rgb(156, 255, 26);
+$space-lime-transparant: rgba($space-lime, 0.1);
 
 // Layout
 $desktop-breakpoint: 768px;

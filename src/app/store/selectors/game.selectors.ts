@@ -9,6 +9,8 @@ export interface GameState {
   playerShips: ShipCard[];
   enemyShips: ShipCard[];
   hand: Card[];
+  deck: Card[];
+  discard: Card[];
 }
 
 export const selectGameState = createFeatureSelector<GameState>('game');
