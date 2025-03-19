@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { Card, CardEffect, CardRarity, CardType, Effects, ShipCard } from '@app/models';
 import { CommonModule, KeyValuePipe } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { SharedUtils } from '@app/utils';
 import { Store } from '@ngrx/store';
 import { saveCard } from '@app/store/actions';
