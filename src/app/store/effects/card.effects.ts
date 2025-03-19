@@ -73,7 +73,6 @@ export class CardEffects {
       ofType(saveCard),
       switchMap((action) => {
         this.store.dispatch(updateVersion());
-        delete action.card.cardType;
         return this.cardService.save(action.card).pipe(
           map(() => {
             return { type: CARD_SET_CARD, card: action.card };

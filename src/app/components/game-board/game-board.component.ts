@@ -17,7 +17,7 @@ import { asShip, isShip } from '@app/utils';
   styleUrl: './game-board.component.scss',
 })
 export class GameBoardComponent implements OnInit {
-  store = inject(Store);
+  private store = inject(Store);
 
   gameState$: Observable<GameState>;
   hand$: Observable<Card[]>;
@@ -60,7 +60,11 @@ export class GameBoardComponent implements OnInit {
   }
 
   dropInUse(event: CdkDragDrop<any, any, any>) {
-    console.log('dropped in use', event);
+    const card = event.item.data;
+    if (!this.isShip(card)) {
+      // TODO: if the card needs a target, add logic and user input for this
+      this.store.dispatch(playCard({ card: card }));
+    }
   }
 
   dropInSalvage(event: CdkDragDrop<any, any, any>) {

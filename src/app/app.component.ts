@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MenuBarComponent } from './components';
 import { RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { getCards, getUser } from './store/actions';
+import { getCards, getSettings, getUser } from './store/actions';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +16,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.dispatch(getUser());
+    this.store.dispatch(getSettings());
     this.store.dispatch(getCards());
   }
 }

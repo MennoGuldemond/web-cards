@@ -18,13 +18,13 @@ export const initialGameState: GameState = {
 const _gameReducer = createReducer(
   initialGameState,
   on(playCard, (state, action) => {
+    let handCopy = [...state.hand];
+    handCopy.splice(handCopy.indexOf(action.card), 1);
     if (isShip(action.card)) {
       const playedCard = asShip(action.card);
-      let handCopy = [...state.hand];
-      handCopy.splice(handCopy.indexOf(playedCard), 1);
       return { ...state, playerShips: [...state.playerShips, playedCard], hand: handCopy };
     }
-    return { ...state };
+    return { ...state, discard: [...state.discard, action.card], hand: handCopy };
   }),
   on(addToHand, (state, action) => {
     return { ...state, hand: [...state.hand, ...action.cards] };
@@ -32,7 +32,7 @@ const _gameReducer = createReducer(
   on(discard, (state, action) => {
     let handCopy = [...state.hand];
     handCopy.splice(handCopy.indexOf(action.card), 1);
-    return { ...state, hand: handCopy };
+    return { ...state, hand: handCopy, discard: [...state.discard, action.card] };
   }),
   on(takeDamage, (state, action) => {
     return { ...state, arkHealth: state.arkHealth - action.amount };

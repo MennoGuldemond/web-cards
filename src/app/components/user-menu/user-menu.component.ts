@@ -18,9 +18,9 @@ import { Observable } from 'rxjs';
   styleUrl: './user-menu.component.scss',
 })
 export class UserMenuComponent {
-  store = inject(Store);
-  authService = inject(AuthService);
-  router = inject(Router);
+  private store = inject(Store);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   user$: Observable<User>;
 
