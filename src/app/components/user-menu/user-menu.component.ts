@@ -39,6 +39,10 @@ export class UserMenuComponent {
     this.store.dispatch(logout());
   }
 
+  navigateToGame() {
+    this.router.navigate(['game']);
+  }
+
   navigateToAccount() {
     // this.router.navigate(['profiel']);
   }
