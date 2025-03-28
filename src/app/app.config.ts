@@ -31,10 +31,6 @@ export const appConfig: ApplicationConfig = {
     provideState({ name: 'game', reducer: gameReducer }),
     provideState({ name: 'settings', reducer: settingReducer }),
     provideEffects([AuthEffects, CardEffects, GameEffects, SettingEffects]),
-    provideStoreDevtools({
-      maxAge: 25,
-      logOnly: environment.production,
-      name: 'web-cards',
-    }),
+    provideStoreDevtools({ maxAge: 25, logOnly: environment.production }),
   ],
 };
