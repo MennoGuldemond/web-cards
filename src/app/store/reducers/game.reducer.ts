@@ -5,7 +5,7 @@ import { asShip, isShip } from '@app/utils';
 import { TurnPhase } from '@app/models';
 
 export const initialGameState: GameState = {
-  turnPhase: TurnPhase.EnemyPlay,
+  turnPhase: TurnPhase.PlayerPlay,
   turnNumber: 1,
   arkHealth: 20,
   credits: 2,
@@ -20,7 +20,7 @@ export const initialGameState: GameState = {
 const _gameReducer = createReducer(
   initialGameState,
   on(setPhase, (state, action) => {
-    return { ...state, phase: action.phase };
+    return { ...state, turnPhase: action.phase };
   }),
   on(setTurn, (state, action) => {
     return { ...state, turnNumber: action.number };

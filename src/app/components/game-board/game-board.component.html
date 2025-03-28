@@ -39,31 +39,41 @@
       </div>
     </div>
 
-    <div
-      id="hand"
-      class="hand"
-      cdkDropList
-      #handList="cdkDropList"
-      [cdkDropListData]="hand$ | async"
-      [cdkDropListConnectedTo]="[battlefieldList, salvageList, useList]"
-    >
-      @for (card of hand$ | async; track card.id) {
-      <app-card
-        cdkDrag
-        [cdkDragData]="card"
-        (cdkDragStarted)="startDrag(card)"
-        (cdkDragEnded)="stopDrag()"
-        [cdkDragDisabled]="(canAfford(card) | async) === false"
-        [card]="card"
-        (cdkDragEntered)="dragEnter($event)"
+    <div class="player-area">
+      <button
+        mat-stroked-button
+        [disabled]="(gameState$ | async)?.turnPhase !== playerPhase"
+        class="end-turn-button"
+        (click)="endTurn()"
       >
-        <!-- @if (this.isShip(card)) {
-        <ng-template cdkDragPreview>
-          <app-ship [shipCard]="getShipCard(card)"></app-ship>
-        </ng-template>
-        } -->
-      </app-card>
-      }
+        End Turn
+      </button>
+      <div
+        id="hand"
+        class="hand"
+        cdkDropList
+        #handList="cdkDropList"
+        [cdkDropListData]="hand$ | async"
+        [cdkDropListConnectedTo]="[battlefieldList, salvageList, useList]"
+      >
+        @for (card of hand$ | async; track card.id) {
+        <app-card
+          cdkDrag
+          [cdkDragData]="card"
+          (cdkDragStarted)="startDrag(card)"
+          (cdkDragEnded)="stopDrag()"
+          [cdkDragDisabled]="(canAfford(card) | async) === false"
+          [card]="card"
+          (cdkDragEntered)="dragEnter($event)"
+        >
+          <!-- @if (this.isShip(card)) {
+          <ng-template cdkDragPreview>
+            <app-ship [shipCard]="getShipCard(card)"></app-ship>
+          </ng-template>
+          } -->
+        </app-card>
+        }
+      </div>
     </div>
   </div>
 </div>

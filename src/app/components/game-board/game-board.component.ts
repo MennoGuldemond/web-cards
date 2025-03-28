@@ -3,16 +3,17 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { Store } from '@ngrx/store';
 import { map, Observable, take } from 'rxjs';
-import { Card, ShipCard } from '@app/models';
+import { Card, ShipCard, TurnPhase } from '@app/models';
 import { GameState, selectEnemyShips, selectGameState, selectHand, selectPlayerShips } from '@app/store/selectors';
-import { discard, drawCards, playCard } from '@app/store/actions';
+import { discard, drawCards, nextPhase, playCard } from '@app/store/actions';
 import { CardComponent } from '../card/card.component';
 import { ShipComponent } from '../ship/ship.component';
 import { asShip, isShip } from '@app/utils';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-game-board',
-  imports: [CommonModule, CardComponent, ShipComponent, CdkDrag, CdkDropList],
+  imports: [CommonModule, CardComponent, MatButtonModule, ShipComponent, CdkDrag, CdkDropList],
   templateUrl: './game-board.component.html',
   styleUrl: './game-board.component.scss',
 })
@@ -23,6 +24,8 @@ export class GameBoardComponent implements OnInit {
   hand$: Observable<Card[]>;
   playerShips$: Observable<Card[]>;
   enemyShips$: Observable<Card[]>;
+
+  readonly playerPhase = TurnPhase.PlayerPlay;
 
   draggingCard: Card = null;
   isOverBattlefield = false;
@@ -69,6 +72,10 @@ export class GameBoardComponent implements OnInit {
 
   dropInSalvage(event: CdkDragDrop<any, any, any>) {
     this.store.dispatch(discard({ card: event.item.data }));
+  }
+
+  endTurn() {
+    this.store.dispatch(nextPhase());
   }
 
   canAfford(card: Card): Observable<boolean> {

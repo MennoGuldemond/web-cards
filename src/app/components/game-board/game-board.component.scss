@@ -82,6 +82,23 @@
     background: transparent; // No card background
   }
 
+  .player-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .end-turn-button {
+      height: 100px;
+      width: 100px;
+      &:hover {
+        transform: scale(1.1);
+      }
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+  }
+
   .hand {
     display: flex;
     justify-content: right;

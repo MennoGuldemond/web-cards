@@ -11,7 +11,7 @@ import {
   nextTurn,
   playCard,
 } from '../actions';
-import { map, switchMap } from 'rxjs';
+import { map, switchMap, take } from 'rxjs';
 import { isShip } from '@app/utils';
 import { Store } from '@ngrx/store';
 import { selectCards, selectPhase, selectTurn } from '../selectors';
@@ -27,6 +27,7 @@ export class GameEffects {
       ofType(nextPhase),
       switchMap((action) => {
         return this.store.select(selectPhase).pipe(
+          take(1),
           map((phase) => {
             switch (phase) {
               case TurnPhase.EnemyPlay:

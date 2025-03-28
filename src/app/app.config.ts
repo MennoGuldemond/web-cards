@@ -33,6 +33,8 @@ export const appConfig: ApplicationConfig = {
     provideEffects([AuthEffects, CardEffects, GameEffects, SettingEffects]),
     provideStoreDevtools({
       maxAge: 25,
+      logOnly: environment.production,
+      name: 'web-cards',
     }),
   ],
 };
