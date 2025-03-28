@@ -88,8 +88,13 @@
     align-items: center;
 
     .end-turn-button {
-      height: 100px;
-      width: 100px;
+      font-size: 1.4em;
+      height: 120px;
+      width: 120px;
+      &:not(:disabled) {
+        border-color: vars.$card-cyan;
+        color: vars.$card-cyan;
+      }
       &:hover {
         transform: scale(1.1);
       }
