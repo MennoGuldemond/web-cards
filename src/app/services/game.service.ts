@@ -51,7 +51,7 @@ export class GameService {
     let selectedShips: ShipCard[] = [];
     let totalLevel = 0;
 
-    while (totalLevel < maxTotalLevel && potentialShips.length > 0) {
+    while (totalLevel < maxTotalLevel && potentialShips.length) {
       // Randomly select a ship from the available ones
       const selected = potentialShips[Math.floor(Math.random() * potentialShips.length)];
 
