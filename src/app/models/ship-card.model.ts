@@ -9,5 +9,7 @@ export interface ShipCard extends Card {
     baseInitiative: number;
     initiative: number;
     transparentImageUrl: string;
+    isEnemy?: boolean;
+    enemyLevel?: number;
   };
 }

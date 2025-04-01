@@ -37,6 +37,7 @@ export class GameEffects {
               case TurnPhase.BattleResolve:
                 return { type: GAME_SET_PHASE, phase: TurnPhase.DrawPhase };
               case TurnPhase.DrawPhase:
+                this.store.dispatch(nextTurn());
                 return { type: GAME_SET_PHASE, phase: TurnPhase.EnemyPlay };
               default:
                 throw new Error('Turn phase not implemented.');
@@ -52,6 +53,7 @@ export class GameEffects {
       ofType(nextTurn),
       switchMap((action) => {
         return this.store.select(selectTurn).pipe(
+          take(1),
           map((turnNumber) => {
             return { type: GAME_SET_TURN, number: turnNumber + 1 };
           })
@@ -65,6 +67,7 @@ export class GameEffects {
       ofType(drawCards),
       switchMap((action) => {
         return this.store.select(selectCards).pipe(
+          take(1),
           map((cards) => {
             const toDraw = cards.slice(0, action.amount <= cards.length ? action.amount : cards.length);
             return { type: GAME_ADD_TO_HAND, cards: toDraw };

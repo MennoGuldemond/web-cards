@@ -4,6 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Card, CardEffect, CardRarity, CardType, Effects, ShipCard } from '@app/models';
 import { CommonModule, KeyValuePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
@@ -22,6 +23,7 @@ import { selectCardById } from '@app/store/selectors';
     MatSelectModule,
     KeyValuePipe,
     MatIconModule,
+    MatCheckboxModule,
   ],
   templateUrl: './card-edit.component.html',
   styleUrl: './card-edit.component.scss',
@@ -94,6 +96,8 @@ export class CardEditComponent implements OnInit {
         maxHealth: new FormControl(card['ship']?.maxHealth || 1, [Validators.min(1)]),
         baseAttack: new FormControl(card['ship']?.baseAttack || 1, [Validators.min(0)]),
         initiative: new FormControl(card['ship']?.initiative || 50, [Validators.min(0)]),
+        level: new FormControl(card['ship']?.level || 1, [Validators.min(1)]),
+        isEnemy: new FormControl(card['ship']?.isEnemy || false),
       }),
     });
 
@@ -122,11 +126,18 @@ export class CardEditComponent implements OnInit {
         'initiative',
         new FormControl(shipData?.initiative || 50, [Validators.required, Validators.min(0)])
       );
+      shipStats.addControl(
+        'level',
+        new FormControl(card['ship']?.level || 1, [Validators.required, Validators.min(1)])
+      );
+      shipStats.addControl('isEnemy', new FormControl(card['ship']?.isEnemy || false, [Validators.required]));
     } else {
       shipStats.removeControl('transparentImageUrl');
       shipStats.removeControl('maxHealth');
       shipStats.removeControl('baseAttack');
       shipStats.removeControl('initiative');
+      shipStats.removeControl('level');
+      shipStats.removeControl('isEnemy');
     }
   }
 

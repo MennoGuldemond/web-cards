@@ -72,9 +72,9 @@
     </div>
   </div>
   @if (form.get('cardType')?.value === cardTypeEnum.ship) {
-  <div class="input-columns">
-    <div class="column" formGroupName="ship">
-      <h3>Ship Stats</h3>
+  <h3>Ship Stats</h3>
+  <div class="input-columns" formGroupName="ship">
+    <div class="column">
       <mat-form-field>
         <mat-label>Max Health</mat-label>
         <input matInput formControlName="maxHealth" type="number" />
@@ -87,12 +87,18 @@
         <mat-label>Initiative</mat-label>
         <input matInput formControlName="initiative" type="number" />
       </mat-form-field>
+    </div>
+    <div class="column">
       <mat-form-field>
         <mat-label>Transparent image URL</mat-label>
         <input matInput formControlName="transparentImageUrl" />
       </mat-form-field>
+      <mat-form-field>
+        <mat-label>Level</mat-label>
+        <input matInput formControlName="level" type="number" />
+      </mat-form-field>
+      <mat-checkbox formControlName="isEnemy">Is Enemy</mat-checkbox>
     </div>
-    <div class="column"></div>
   </div>
   }
   <div>
