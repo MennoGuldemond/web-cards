@@ -11,7 +11,7 @@ import {
   nextTurn,
   playCard,
 } from '../actions';
-import { map, switchMap, take } from 'rxjs';
+import { map, withLatestFrom } from 'rxjs';
 import { isShip } from '@app/utils';
 import { Store } from '@ngrx/store';
 import { selectCards, selectPhase, selectTurn } from '../selectors';
@@ -25,25 +25,20 @@ export class GameEffects {
   nextPhase$ = createEffect(() =>
     this.actions$.pipe(
       ofType(nextPhase),
-      switchMap((action) => {
-        return this.store.select(selectPhase).pipe(
-          take(1),
-          map((phase) => {
-            switch (phase) {
-              case TurnPhase.EnemyPlay:
-                return { type: GAME_SET_PHASE, phase: TurnPhase.PlayerPlay };
-              case TurnPhase.PlayerPlay:
-                return { type: GAME_SET_PHASE, phase: TurnPhase.BattleResolve };
-              case TurnPhase.BattleResolve:
-                return { type: GAME_SET_PHASE, phase: TurnPhase.DrawPhase };
-              case TurnPhase.DrawPhase:
-                this.store.dispatch(nextTurn());
-                return { type: GAME_SET_PHASE, phase: TurnPhase.EnemyPlay };
-              default:
-                throw new Error('Turn phase not implemented.');
-            }
-          })
-        );
+      withLatestFrom(this.store.select(selectPhase)),
+      map(([_, phase]) => {
+        switch (phase) {
+          case TurnPhase.EnemyPlay:
+            return { type: GAME_SET_PHASE, phase: TurnPhase.PlayerPlay };
+          case TurnPhase.PlayerPlay:
+            return { type: GAME_SET_PHASE, phase: TurnPhase.BattleResolve };
+          case TurnPhase.BattleResolve:
+            return { type: GAME_SET_PHASE, phase: TurnPhase.DrawPhase };
+          case TurnPhase.DrawPhase:
+            return nextTurn(), { type: GAME_SET_PHASE, phase: TurnPhase.EnemyPlay };
+          default:
+            throw new Error('Turn phase not implemented.');
+        }
       })
     )
   );
@@ -51,31 +46,22 @@ export class GameEffects {
   nextTurn$ = createEffect(() =>
     this.actions$.pipe(
       ofType(nextTurn),
-      switchMap((action) => {
-        return this.store.select(selectTurn).pipe(
-          take(1),
-          map((turnNumber) => {
-            return { type: GAME_SET_TURN, number: turnNumber + 1 };
-          })
-        );
-      })
+      withLatestFrom(this.store.select(selectTurn)),
+      map(([_, turnNumber]) => ({
+        type: GAME_SET_TURN,
+        number: turnNumber + 1,
+      }))
     )
   );
 
   drawCards$ = createEffect(() =>
     this.actions$.pipe(
       ofType(drawCards),
-      switchMap((action) => {
-        return this.store.select(selectCards).pipe(
-          take(1),
-          map((cards) => {
-            // Filter out enemy cards
-            const playerCards = cards.filter((card) => !card['ship']?.isEnemy);
-            // Select the number of cards to draw
-            const toDraw = playerCards.slice(0, Math.min(action.amount, playerCards.length));
-            return { type: GAME_ADD_TO_HAND, cards: toDraw };
-          })
-        );
+      withLatestFrom(this.store.select(selectCards)),
+      map(([action, cards]) => {
+        const playerCards = cards.filter((card) => !card['ship']?.isEnemy);
+        const toDraw = playerCards.slice(0, Math.min(action.amount, playerCards.length));
+        return { type: GAME_ADD_TO_HAND, cards: toDraw };
       })
     )
   );
