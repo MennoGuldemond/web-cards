@@ -1,20 +1,19 @@
 import { Injectable } from '@angular/core';
 import { ShipCard } from '@app/models';
+import { GameState } from '@app/store/selectors';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GameService {
-  resolveBattle() {
-    // TODO: move to state?
-    const state = {} as any;
+  resolveBattle(gameState: GameState) {
     // Sort ships by initiative
-    state.playerShips.sort((a, b) => b.ship.initiative - a.ship.initiative);
-    state.enemyShips.sort((a, b) => b.ship.initiative - a.ship.initiative);
+    gameState.playerShips.sort((a, b) => b.ship.initiative - a.ship.initiative);
+    gameState.enemyShips.sort((a, b) => b.ship.initiative - a.ship.initiative);
 
     // Resolve attacks
-    this.handleAttacks(state.playerShips, state.enemyShips);
-    this.handleAttacks(state.enemyShips, state.playerShips, true);
+    this.handleAttacks(gameState.playerShips, gameState.enemyShips);
+    this.handleAttacks(gameState.enemyShips, gameState.playerShips, true);
   }
 
   private handleAttacks(attackingShips: ShipCard[], defendingShips: ShipCard[], targetArk = false) {

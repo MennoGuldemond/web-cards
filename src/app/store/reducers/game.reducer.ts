@@ -1,5 +1,16 @@
 import { createReducer, on } from '@ngrx/store';
-import { addToHand, discard, playCard, refuel, setPhase, setTurn, spendCredits, takeDamage, useFuel } from '../actions';
+import {
+  addEnemies,
+  addToHand,
+  discard,
+  playCard,
+  refuel,
+  setPhase,
+  setTurn,
+  spendCredits,
+  takeDamage,
+  useFuel,
+} from '../actions';
 import { GameState } from '../selectors';
 import { asShip, isShip } from '@app/utils';
 import { TurnPhase } from '@app/models';
@@ -53,6 +64,9 @@ const _gameReducer = createReducer(
   }),
   on(refuel, (state, action) => {
     return { ...state, fuel: state.fuel + action.amount };
+  }),
+  on(addEnemies, (state, action) => {
+    return { ...state, enemyShips: [...state.enemyShips, ...action.enemies] };
   })
 );
 
