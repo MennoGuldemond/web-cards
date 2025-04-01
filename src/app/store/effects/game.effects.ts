@@ -69,7 +69,10 @@ export class GameEffects {
         return this.store.select(selectCards).pipe(
           take(1),
           map((cards) => {
-            const toDraw = cards.slice(0, action.amount <= cards.length ? action.amount : cards.length);
+            // Filter out enemy cards
+            const playerCards = cards.filter((card) => !card['ship']?.isEnemy);
+            // Select the number of cards to draw
+            const toDraw = playerCards.slice(0, Math.min(action.amount, playerCards.length));
             return { type: GAME_ADD_TO_HAND, cards: toDraw };
           })
         );
