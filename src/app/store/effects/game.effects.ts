@@ -16,7 +16,7 @@ import {
   spawnEnemies,
 } from '../actions';
 import { map, tap, withLatestFrom } from 'rxjs';
-import { asShipCard, isShip } from '@app/utils';
+import { isShip, withRandomId } from '@app/utils';
 import { Store } from '@ngrx/store';
 import { selectAllPlayerCards, selectPhase, selectTurn } from '../selectors';
 import { ShipCard, TurnPhase } from '@app/models';
@@ -86,7 +86,7 @@ export class GameEffects {
       ofType(drawCards),
       withLatestFrom(this.store.select(selectAllPlayerCards)),
       map(([action, playerCards]) => {
-        const toDraw = playerCards.slice(0, Math.min(action.amount, playerCards.length));
+        const toDraw = playerCards.slice(0, Math.min(action.amount, playerCards.length)).map(withRandomId);
         return { type: GAME_ADD_TO_HAND, cards: toDraw };
       })
     )

@@ -24,3 +24,8 @@ export function asShip(card: Card): ShipCard {
   }
   return null;
 }
+
+/** Retruns the card with a new random id. */
+export function withRandomId(card: Card): Card {
+  return { ...card, id: uuidv4() };
+}

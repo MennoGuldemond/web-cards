@@ -41,7 +41,6 @@ export class GameBoardComponent implements OnInit {
   ngOnInit() {
     this.store.dispatch(drawCards({ amount: 5 }));
     this.store.dispatch(setPhase({ phase: TurnPhase.EnemyPlay }));
-    // this.enemyShips$.subscribe((x) => console.log(x));
   }
 
   startDrag(card: Card) {
