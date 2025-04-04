@@ -11,13 +11,14 @@ import {
   attackStart,
   attackEnd,
 } from '../actions';
-import { map, withLatestFrom } from 'rxjs';
+import { delay, map, of, switchMap, withLatestFrom } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectAllEnemyShipCards, selectBattlefieldState, selectGameState } from '../selectors';
-import { generateEnemyWave } from '@app/utils';
+import { calculateHit, generateEnemyWave } from '@app/utils';
 
 @Injectable()
 export class BattlefieldEffects {
+  private readonly BATTLE_DELAY = 500;
   private store = inject(Store);
   private actions$ = inject(Actions);
 
@@ -70,16 +71,21 @@ export class BattlefieldEffects {
     this.actions$.pipe(
       ofType(attackStart),
       withLatestFrom(this.store.select(selectBattlefieldState)),
-      map(([action, battlefieldState]) => {
+      switchMap(([action, battlefieldState]) => {
         if (battlefieldState.battleQue.length) {
           const attacker = battlefieldState.battleQue[0];
           const defender = attacker.ship.isEnemy ? battlefieldState.playerShips[0] : battlefieldState.enemyShips[0];
-          // TODO: calculate if hit, apply possible moddifiers
-          console.log(`${attacker.title} attacked ${defender.title} for ${attacker.ship.attack} damage`);
-          this.store.dispatch(damageShip({ card: defender, amount: attacker.ship.attack }));
-          return attackEnd();
+
+          if (calculateHit(attacker, defender)) {
+            console.log(`${attacker.title} attacked ${defender.title} for ${attacker.ship.attack} damage`);
+            this.store.dispatch(damageShip({ card: defender, amount: attacker.ship.attack }));
+          } else {
+            console.log(`${attacker.title} missed ${defender.title}`);
+          }
+
+          return of(attackEnd()).pipe(delay(this.BATTLE_DELAY));
         }
-        return endBattle();
+        return of(endBattle()).pipe(delay(this.BATTLE_DELAY));
       })
     )
   );
