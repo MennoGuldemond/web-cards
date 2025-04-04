@@ -39,6 +39,7 @@ export class GameEffects {
           case TurnPhase.BattleResolve:
             return { type: GAME_SET_PHASE, phase: TurnPhase.DrawPhase };
           case TurnPhase.DrawPhase:
+            this.store.dispatch(nextTurn());
             return { type: GAME_SET_PHASE, phase: TurnPhase.EnemyPlay };
           default:
             throw new Error('Turn phase not implemented.');
