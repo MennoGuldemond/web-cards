@@ -12,8 +12,8 @@ import { environment } from '@env/environment';
 import { provideState, provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
-import { authReducer, cardReducer, gameReducer, settingReducer } from './store/reducers';
-import { AuthEffects, CardEffects, GameEffects, SettingEffects } from './store/effects';
+import { authReducer, battlefieldReducer, cardReducer, gameReducer, settingReducer } from './store/reducers';
+import { AuthEffects, BattlefieldEffects, CardEffects, GameEffects, SettingEffects } from './store/effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -30,7 +30,8 @@ export const appConfig: ApplicationConfig = {
     provideState({ name: 'card', reducer: cardReducer }),
     provideState({ name: 'game', reducer: gameReducer }),
     provideState({ name: 'settings', reducer: settingReducer }),
-    provideEffects([AuthEffects, CardEffects, GameEffects, SettingEffects]),
+    provideState({ name: 'battlefield', reducer: battlefieldReducer }),
+    provideEffects([AuthEffects, CardEffects, GameEffects, SettingEffects, BattlefieldEffects]),
     provideStoreDevtools({ maxAge: 25, logOnly: environment.production }),
   ],
 };

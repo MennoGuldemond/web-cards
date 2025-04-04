@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { Card, CardEffect, ShipCard } from '@app/models';
-import { asShip, EffectResolver, isShip } from '@app/utils';
+import { asShipCard, EffectResolver, isShip } from '@app/utils';
 
 @Component({
   selector: 'app-card',
@@ -16,7 +16,7 @@ export class CardComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.isShip()) {
-      this.card = asShip(this.card);
+      this.card = asShipCard(this.card);
     }
   }
 

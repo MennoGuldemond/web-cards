@@ -1,41 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ShipCard } from '@app/models';
-import { GameState } from '@app/store/selectors';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GameService {
-  resolveBattle(gameState: GameState) {
-    // Sort ships by initiative
-    gameState.playerShips.sort((a, b) => b.ship.initiative - a.ship.initiative);
-    gameState.enemyShips.sort((a, b) => b.ship.initiative - a.ship.initiative);
-
-    // Resolve attacks
-    this.handleAttacks(gameState.playerShips, gameState.enemyShips);
-    this.handleAttacks(gameState.enemyShips, gameState.playerShips, true);
-  }
-
-  private handleAttacks(attackingShips: ShipCard[], defendingShips: ShipCard[], targetArk = false) {
-    for (let attacker of attackingShips) {
-      if (defendingShips.length > 0) {
-        const target = defendingShips[0]; // Target the first available enemy ship
-        if (target) {
-          target.ship.health -= attacker.ship.attack;
-          console.log(`${attacker.title} attacks ${target.title} for ${attacker.ship.attack} damage!`);
-
-          // Remove ship if destroyed
-          if (target.ship.health <= 0) {
-            console.log(`${target.title} is destroyed!`);
-            defendingShips.shift();
-          }
-        } else if (targetArk) {
-          // this.takeDamage(attacker.ship.attack);
-        }
-      }
-    }
-  }
-
   generateEnemyWave(availableEnemyShips: ShipCard[], stage: number): ShipCard[] {
     // Define difficulty scaling based on stage
     const minLevel = Math.max(1, stage - 2); // Ensure minimum level is at least 1

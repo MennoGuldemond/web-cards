@@ -27,14 +27,14 @@
         @if (draggingCard && isOverBattlefield && this.isShip(draggingCard)) {
         <app-ship [shipCard]="getShipCard(draggingCard)"></app-ship>
         } @for (ship of playerShips$ | async; track ship.id) {
-        <app-ship [shipCard]="getShipCard(ship)"></app-ship>
+        <app-ship [shipCard]="ship"></app-ship>
         }
       </div>
 
       <!-- Enemy Ships (Right Side) -->
       <div class="enemy-side">
         @for (ship of enemyShips$ | async; track ship.id) {
-        <app-ship [shipCard]="getShipCard(ship)"></app-ship>
+        <app-ship [shipCard]="ship"></app-ship>
         }
       </div>
     </div>

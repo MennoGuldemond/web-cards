@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
-  addEnemies,
+  addPlayerShip,
   drawCards,
   GAME_ADD_TO_HAND,
   GAME_SET_PHASE,
@@ -11,22 +11,20 @@ import {
   nextPhase,
   nextTurn,
   playCard,
-  resolveBattle,
+  startBattle,
   setPhase,
   spawnEnemies,
 } from '../actions';
 import { map, tap, withLatestFrom } from 'rxjs';
-import { isShip } from '@app/utils';
+import { asShipCard, isShip } from '@app/utils';
 import { Store } from '@ngrx/store';
-import { selectAllEnemyShips, selectAllPlayerCards, selectGameState, selectPhase, selectTurn } from '../selectors';
-import { TurnPhase } from '@app/models';
-import { GameService } from '@app/services';
+import { selectAllPlayerCards, selectPhase, selectTurn } from '../selectors';
+import { ShipCard, TurnPhase } from '@app/models';
 
 @Injectable()
 export class GameEffects {
   private store = inject(Store);
   private actions$ = inject(Actions);
-  private gameService = inject(GameService);
 
   nextPhase$ = createEffect(() =>
     this.actions$.pipe(
@@ -59,7 +57,7 @@ export class GameEffects {
               this.store.dispatch(spawnEnemies());
               break;
             case TurnPhase.BattleResolve:
-              this.store.dispatch(resolveBattle());
+              this.store.dispatch(startBattle());
               break;
             case TurnPhase.DrawPhase:
               // TODO: fix card amount based on rules
@@ -99,33 +97,11 @@ export class GameEffects {
       ofType(playCard),
       map((action) => {
         if (isShip(action.card)) {
+          this.store.dispatch(addPlayerShip({ card: action.card as ShipCard }));
           return { type: GAME_USE_FUEL, amount: action.card.cost };
         } else {
           return { type: GAME_SPEND_CREDITS, amount: action.card.cost };
         }
-      })
-    )
-  );
-
-  spawnEnemies$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(spawnEnemies),
-      withLatestFrom(this.store.select(selectGameState), this.store.select(selectAllEnemyShips)),
-      map(([action, gameState, enemyShips]) => {
-        const shipsToAdd = this.gameService.generateEnemyWave(enemyShips, gameState.turnNumber);
-        this.store.dispatch(addEnemies({ enemies: shipsToAdd }));
-        return nextPhase();
-      })
-    )
-  );
-
-  resolveBattle$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(resolveBattle),
-      withLatestFrom(this.store.select(selectGameState)),
-      map(([action, gameState]) => {
-        this.gameService.resolveBattle(gameState);
-        return nextPhase();
       })
     )
   );

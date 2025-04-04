@@ -5,10 +5,10 @@ import { Store } from '@ngrx/store';
 import { map, Observable, take } from 'rxjs';
 import { Card, ShipCard, TurnPhase } from '@app/models';
 import { GameState, selectEnemyShips, selectGameState, selectHand, selectPlayerShips } from '@app/store/selectors';
-import { discard, drawCards, nextPhase, playCard } from '@app/store/actions';
+import { discard, drawCards, nextPhase, playCard, setPhase } from '@app/store/actions';
 import { CardComponent } from '../card/card.component';
 import { ShipComponent } from '../ship/ship.component';
-import { asShip, isShip } from '@app/utils';
+import { asShipCard, isShip } from '@app/utils';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -22,8 +22,8 @@ export class GameBoardComponent implements OnInit {
 
   gameState$: Observable<GameState>;
   hand$: Observable<Card[]>;
-  playerShips$: Observable<Card[]>;
-  enemyShips$: Observable<Card[]>;
+  playerShips$: Observable<ShipCard[]>;
+  enemyShips$: Observable<ShipCard[]>;
 
   readonly playerPhase = TurnPhase.PlayerPlay;
 
@@ -40,6 +40,8 @@ export class GameBoardComponent implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(drawCards({ amount: 5 }));
+    this.store.dispatch(setPhase({ phase: TurnPhase.EnemyPlay }));
+    // this.enemyShips$.subscribe((x) => console.log(x));
   }
 
   startDrag(card: Card) {
@@ -96,6 +98,6 @@ export class GameBoardComponent implements OnInit {
   }
 
   getShipCard(card: Card): ShipCard {
-    return asShip(card);
+    return asShipCard(card);
   }
 }

@@ -1,4 +1,4 @@
-import { Card, ShipCard, TurnPhase } from '@app/models';
+import { Card, TurnPhase } from '@app/models';
 import { createAction, props } from '@ngrx/store';
 
 export const GAME_NEXT_PHASE = '[Game] nextPhase';
@@ -16,10 +16,6 @@ export const GAME_SPEND_CREDITS = '[Game] spendCredits';
 export const GAME_USE_FUEL = '[Game] useFuel';
 export const GAME_REFUEL = '[Game] refuel';
 
-export const GAME_SPAWN_ENEMIES = '[Game] spawnEnemies';
-export const GAME_ADD_ENEMIES = '[Game] addEnemies';
-export const GAME_RESOLVE_BATTLE = '[Game] resolveBattle';
-
 export const nextPhase = createAction(GAME_NEXT_PHASE);
 export const setPhase = createAction(GAME_SET_PHASE, props<{ phase: TurnPhase }>());
 export const nextTurn = createAction(GAME_NEXT_TURN);
@@ -34,7 +30,3 @@ export const takeDamage = createAction(GAME_TAKE_DAMAGE, props<{ amount: number 
 export const spendCredits = createAction(GAME_SPEND_CREDITS, props<{ amount: number }>());
 export const useFuel = createAction(GAME_USE_FUEL, props<{ amount: number }>());
 export const refuel = createAction(GAME_REFUEL, props<{ amount: number }>());
-
-export const spawnEnemies = createAction(GAME_SPAWN_ENEMIES);
-export const addEnemies = createAction(GAME_ADD_ENEMIES, props<{ enemies: ShipCard[] }>());
-export const resolveBattle = createAction(GAME_RESOLVE_BATTLE);

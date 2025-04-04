@@ -13,7 +13,7 @@ import {
   setCards,
   updateVersion,
 } from '../actions';
-import { asShip, isShip } from '@app/utils';
+import { asShipCard, isShip } from '@app/utils';
 import { getFromLocalStorage, saveToLocalStorage } from '@app/utils/storage-utils';
 import { Card } from '@app/models';
 import { Store } from '@ngrx/store';
@@ -59,7 +59,7 @@ export class CardEffects {
         map((cards) => {
           cards.forEach((card) => {
             if (isShip(card)) {
-              card = asShip(card);
+              card = asShipCard(card);
             }
           });
           return { type: CARD_SET_CARDS, cards: cards };

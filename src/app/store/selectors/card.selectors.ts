@@ -10,7 +10,7 @@ export const selectCards = createSelector(selectCardState, (state) => [...state.
 export const selectAllPlayerCards = createSelector(selectCardState, (state) => [
   ...state.cards.filter((card) => !card['ship']?.isEnemy),
 ]);
-export const selectAllEnemyShips = createSelector(
+export const selectAllEnemyShipCards = createSelector(
   selectCardState,
   (state) => [...state.cards.filter((card) => card['ship']?.isEnemy)] as ShipCard[]
 );
