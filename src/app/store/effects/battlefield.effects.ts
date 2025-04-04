@@ -14,20 +14,19 @@ import {
 import { map, withLatestFrom } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectAllEnemyShipCards, selectBattlefieldState, selectGameState } from '../selectors';
-import { GameService } from '@app/services';
+import { generateEnemyWave } from '@app/utils';
 
 @Injectable()
 export class BattlefieldEffects {
   private store = inject(Store);
   private actions$ = inject(Actions);
-  private gameService = inject(GameService);
 
   spawnEnemies$ = createEffect(() =>
     this.actions$.pipe(
       ofType(spawnEnemies),
       withLatestFrom(this.store.select(selectGameState), this.store.select(selectAllEnemyShipCards)),
       map(([action, gameState, enemyShips]) => {
-        const shipsToAdd = this.gameService.generateEnemyWave(enemyShips, gameState.turnNumber);
+        const shipsToAdd = generateEnemyWave(enemyShips, gameState.turnNumber);
         this.store.dispatch(addEnemies({ cards: shipsToAdd }));
         return nextPhase();
       })
