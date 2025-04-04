@@ -53,7 +53,6 @@ export class BattlefieldEffects {
     this.actions$.pipe(
       ofType(startBattle),
       map((action) => {
-        console.log('Battle has started');
         return attackStart();
       })
     )
@@ -63,7 +62,6 @@ export class BattlefieldEffects {
     this.actions$.pipe(
       ofType(endBattle),
       map((action) => {
-        console.log('Battle has ended');
         return nextPhase();
       })
     )
@@ -80,11 +78,9 @@ export class BattlefieldEffects {
 
           if (calculateHit(attacker, defender)) {
             this.floatEffectService.show(`-${attacker.ship.attack}`, getShipElement(defender.id));
-            console.log(`${attacker.title} attacked ${defender.title} for ${attacker.ship.attack} damage`);
             this.store.dispatch(damageShip({ card: defender, amount: attacker.ship.attack }));
           } else {
             this.floatEffectService.show('miss', getShipElement(defender.id));
-            console.log(`${attacker.title} missed ${defender.title}`);
           }
 
           return of(attackEnd()).pipe(delay(this.BATTLE_DELAY));
