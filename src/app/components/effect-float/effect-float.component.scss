@@ -1,0 +1,20 @@
+.float {
+  position: fixed;
+  font-size: 24px;
+  color: red;
+  animation: float-up 1s ease-out forwards;
+  pointer-events: none;
+  font-weight: bold;
+  text-shadow: 1px 1px black;
+}
+
+@keyframes float-up {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+}

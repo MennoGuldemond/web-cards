@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { Card, CardEffect, ShipCard } from '@app/models';
-import { asShipCard, EffectResolver, isShip } from '@app/utils';
+import { asShipCard, getDescription, isShip } from '@app/utils';
 
 @Component({
   selector: 'app-card',
@@ -33,6 +33,6 @@ export class CardComponent implements OnInit {
   }
 
   getEffectDescription(effect: CardEffect): string {
-    return EffectResolver.getDescription(effect);
+    return getDescription(effect);
   }
 }

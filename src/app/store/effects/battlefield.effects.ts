@@ -14,13 +14,15 @@ import {
 import { delay, map, of, switchMap, withLatestFrom } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectAllEnemyShipCards, selectBattlefieldState, selectGameState } from '../selectors';
-import { calculateHit, generateEnemyWave } from '@app/utils';
+import { calculateHit, generateEnemyWave, getShipElement } from '@app/utils';
+import { FloatEffectService } from '@app/services';
 
 @Injectable()
 export class BattlefieldEffects {
   private readonly BATTLE_DELAY = 500;
   private store = inject(Store);
   private actions$ = inject(Actions);
+  private floatEffectService = inject(FloatEffectService);
 
   spawnEnemies$ = createEffect(() =>
     this.actions$.pipe(
@@ -77,9 +79,11 @@ export class BattlefieldEffects {
           const defender = attacker.ship.isEnemy ? battlefieldState.playerShips[0] : battlefieldState.enemyShips[0];
 
           if (calculateHit(attacker, defender)) {
+            this.floatEffectService.show(`-${attacker.ship.attack}`, getShipElement(defender.id));
             console.log(`${attacker.title} attacked ${defender.title} for ${attacker.ship.attack} damage`);
             this.store.dispatch(damageShip({ card: defender, amount: attacker.ship.attack }));
           } else {
+            this.floatEffectService.show('miss', getShipElement(defender.id));
             console.log(`${attacker.title} missed ${defender.title}`);
           }
 

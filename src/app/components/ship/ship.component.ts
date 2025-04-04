@@ -1,6 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Card, ShipCard } from '@app/models';
-import { asShip } from '@app/utils';
+import { Component, Input } from '@angular/core';
+import { ShipCard } from '@app/models';
 
 @Component({
   selector: 'app-ship',

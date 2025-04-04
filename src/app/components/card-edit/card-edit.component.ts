@@ -8,10 +8,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Card, CardEffect, CardRarity, CardType, Effects, ShipCard } from '@app/models';
 import { CommonModule, KeyValuePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { SharedUtils } from '@app/utils';
 import { Store } from '@ngrx/store';
 import { saveCard } from '@app/store/actions';
 import { selectCardById } from '@app/store/selectors';
+import { deepEqual } from '@app/utils';
 
 @Component({
   selector: 'app-card-edit',
@@ -146,6 +146,6 @@ export class CardEditComponent implements OnInit {
     if (formValue.cardType !== CardType.ship) {
       delete formValue.ship;
     }
-    return !SharedUtils.deepEqual(this.initialCard, formValue);
+    return !deepEqual(this.initialCard, formValue);
   }
 }

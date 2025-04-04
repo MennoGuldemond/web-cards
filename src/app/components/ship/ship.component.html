@@ -1,4 +1,4 @@
-<div class="ship-container player-ship">
+<div class="ship-container player-ship" [attr.data-ship-id]="shipCard.id">
   <img [src]="shipCard.ship.transparentImageUrl" class="ship-image" />
   <div class="stats">
     <span class="stat attack">{{ shipCard.ship.attack }}</span>
