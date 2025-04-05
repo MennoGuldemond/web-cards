@@ -31,3 +31,18 @@ export function getDescription(effect: CardEffect): string {
       return '';
   }
 }
+
+export function getShortDescription(effect: CardEffect): string {
+  switch (effect.name) {
+    case Effects.health:
+      return `Health ${effect.value > 0 ? '+' + effect.value : '-' + effect.value}`;
+    case Effects.initiative:
+      return `Initiative ${effect.value > 0 ? '+' + effect.value : '-' + effect.value}`;
+    case Effects.dodge:
+      return `Dodge ${effect.value > 0 ? '+' + effect.value : '-' + effect.value}%`;
+    case Effects.regeneration:
+      return `Regeneration ${effect.value > 0 ? '+' + effect.value : '-' + effect.value}`;
+    default:
+      return '';
+  }
+}

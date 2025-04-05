@@ -17,15 +17,17 @@ import {
   addEffectsToShip,
 } from '../actions';
 import { map, tap, withLatestFrom } from 'rxjs';
-import { isShip, withRandomId } from '@app/utils';
+import { getShipElement, getShortDescription, isShip, withRandomId } from '@app/utils';
 import { Store } from '@ngrx/store';
 import { selectAllPlayerCards, selectPhase, selectTurn } from '../selectors';
 import { ShipCard, TurnPhase } from '@app/models';
+import { FloatEffectService } from '@app/services';
 
 @Injectable()
 export class GameEffects {
   private store = inject(Store);
   private actions$ = inject(Actions);
+  private floatEffectService = inject(FloatEffectService);
 
   nextPhase$ = createEffect(() =>
     this.actions$.pipe(
@@ -109,6 +111,9 @@ export class GameEffects {
     this.actions$.pipe(
       ofType(applyCard),
       map((action) => {
+        action.effects.forEach((e) => {
+          this.floatEffectService.show(getShortDescription(e), getShipElement(action.targetShip.id), true);
+        });
         return addEffectsToShip({ card: action.targetShip, effects: action.effects });
       })
     )

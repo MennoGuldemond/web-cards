@@ -1,3 +1,5 @@
+@use '../../../vars';
+
 .ship-container {
   position: relative;
   width: 100px;
@@ -34,4 +36,20 @@
 
 .health {
   border: 2px solid green;
+}
+
+.targetable {
+  outline: 3px solid vars.$space-lime;
+  border-radius: 12px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    outline-color: rgba(vars.$space-lime, 0.8);
+  }
+  50% {
+    outline-color: rgba(vars.$space-lime, 0.3);
+  }
 }

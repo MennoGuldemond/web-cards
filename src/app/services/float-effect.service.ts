@@ -17,7 +17,7 @@ export class FloatEffectService {
     this.renderer = rendererFactory.createRenderer(null, null);
   }
 
-  show(text: string, targetElement: ElementRef) {
+  show(text: string, targetElement: ElementRef, positive: boolean = false) {
     const position = targetElement.nativeElement.getBoundingClientRect();
 
     const componentRef = createComponent(EffectFloatComponent, {
@@ -27,6 +27,7 @@ export class FloatEffectService {
 
     const floatElement = componentRef.location.nativeElement;
     componentRef.instance.text = text;
+    componentRef.instance.positive = positive;
     componentRef.instance.style = {
       top: `${position.top}px`,
       left: `${position.left + position.width / 2}px`,

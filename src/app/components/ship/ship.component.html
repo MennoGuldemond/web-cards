@@ -1,4 +1,4 @@
-<div class="ship-container player-ship" [attr.data-ship-id]="shipCard.id">
+<div class="ship-container player-ship" [attr.data-ship-id]="shipCard.id" [ngClass]="{ targetable: isTargetable }">
   <img [src]="shipCard.ship.transparentImageUrl" class="ship-image" />
   <div class="stats">
     <span class="stat attack">{{ shipCard.ship.attack }}</span>

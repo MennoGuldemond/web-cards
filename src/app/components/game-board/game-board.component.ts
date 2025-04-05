@@ -81,6 +81,7 @@ export class GameBoardComponent implements OnInit {
     if (this.isShip(card)) {
       this.store.dispatch(playCard({ card: card }));
     }
+    this.clearGuide();
   }
 
   dropInUse(event: CdkDragDrop<any, any, any>) {
