@@ -53,6 +53,7 @@
   flex-flow: column;
 
   .battlefield {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -61,6 +62,30 @@
     border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
     padding: 10px;
+
+    .battlefield-guide {
+      position: absolute;
+      top: 0.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #fff;
+      font-size: 1.1rem;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      pointer-events: none; // so it doesn't block interactions
+    }
+
+    .battlefield-guide {
+      opacity: 0;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
   }
 
   .player-side,

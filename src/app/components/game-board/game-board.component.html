@@ -22,19 +22,25 @@
       [cdkDropListData]="playerShips$ | async"
       (cdkDropListDropped)="dropInBattlefield($event)"
     >
+      @if (showGuideText) {
+      <div class="battlefield-guide">
+        {{ guideText }}
+      </div>
+      }
+
       <!-- Player Ships (Left Side) -->
       <div class="player-side">
         @if (draggingCard && isOverBattlefield && this.isShip(draggingCard)) {
         <app-ship [shipCard]="getShipCard(draggingCard)"></app-ship>
         } @for (ship of playerShips$ | async; track ship.id) {
-        <app-ship [shipCard]="ship"></app-ship>
+        <app-ship [shipCard]="ship" (click)="onShipClicked(ship)"></app-ship>
         }
       </div>
 
       <!-- Enemy Ships (Right Side) -->
       <div class="enemy-side">
         @for (ship of enemyShips$ | async; track ship.id) {
-        <app-ship [shipCard]="ship"></app-ship>
+        <app-ship [shipCard]="ship" (click)="onShipClicked(ship)"></app-ship>
         }
       </div>
     </div>

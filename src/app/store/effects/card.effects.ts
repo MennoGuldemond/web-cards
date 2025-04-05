@@ -35,7 +35,7 @@ export class CardEffects {
       }),
       pipe(
         map((card) => {
-          return { type: CARD_SET_CARD, card: card };
+          return setCard({ card: card });
         })
       )
     )
@@ -62,7 +62,7 @@ export class CardEffects {
               card = asShipCard(card);
             }
           });
-          return { type: CARD_SET_CARDS, cards: cards };
+          return setCards({ cards: cards });
         })
       )
     )
@@ -75,7 +75,7 @@ export class CardEffects {
         this.store.dispatch(updateVersion());
         return this.cardService.save(action.card).pipe(
           map(() => {
-            return { type: CARD_SET_CARD, card: action.card };
+            return setCard({ card: action.card });
           })
         );
       })

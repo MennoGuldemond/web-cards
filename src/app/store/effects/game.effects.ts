@@ -3,17 +3,18 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   addPlayerShip,
   drawCards,
-  GAME_ADD_TO_HAND,
-  GAME_SET_PHASE,
-  GAME_SET_TURN,
-  GAME_SPEND_CREDITS,
-  GAME_USE_FUEL,
   nextPhase,
   nextTurn,
   playCard,
   startBattle,
   setPhase,
   spawnEnemies,
+  applyCard,
+  useFuel,
+  spendCredits,
+  addToHand,
+  setTurn,
+  addEffectsToShip,
 } from '../actions';
 import { map, tap, withLatestFrom } from 'rxjs';
 import { isShip, withRandomId } from '@app/utils';
@@ -33,14 +34,14 @@ export class GameEffects {
       map(([action, phase]) => {
         switch (phase) {
           case TurnPhase.EnemyPlay:
-            return { type: GAME_SET_PHASE, phase: TurnPhase.PlayerPlay };
+            return setPhase({ phase: TurnPhase.PlayerPlay });
           case TurnPhase.PlayerPlay:
-            return { type: GAME_SET_PHASE, phase: TurnPhase.BattleResolve };
+            return setPhase({ phase: TurnPhase.BattleResolve });
           case TurnPhase.BattleResolve:
-            return { type: GAME_SET_PHASE, phase: TurnPhase.DrawPhase };
+            return setPhase({ phase: TurnPhase.DrawPhase });
           case TurnPhase.DrawPhase:
             this.store.dispatch(nextTurn());
-            return { type: GAME_SET_PHASE, phase: TurnPhase.EnemyPlay };
+            return setPhase({ phase: TurnPhase.EnemyPlay });
           default:
             throw new Error('Turn phase not implemented.');
         }
@@ -75,10 +76,7 @@ export class GameEffects {
     this.actions$.pipe(
       ofType(nextTurn),
       withLatestFrom(this.store.select(selectTurn)),
-      map(([action, turnNumber]) => ({
-        type: GAME_SET_TURN,
-        number: turnNumber + 1,
-      }))
+      map(([action, turnNumber]) => setTurn({ number: turnNumber + 1 }))
     )
   );
 
@@ -88,7 +86,7 @@ export class GameEffects {
       withLatestFrom(this.store.select(selectAllPlayerCards)),
       map(([action, playerCards]) => {
         const toDraw = playerCards.slice(0, Math.min(action.amount, playerCards.length)).map(withRandomId);
-        return { type: GAME_ADD_TO_HAND, cards: toDraw };
+        return addToHand({ cards: toDraw });
       })
     )
   );
@@ -99,10 +97,19 @@ export class GameEffects {
       map((action) => {
         if (isShip(action.card)) {
           this.store.dispatch(addPlayerShip({ card: action.card as ShipCard }));
-          return { type: GAME_USE_FUEL, amount: action.card.cost };
+          return useFuel({ amount: action.card.cost });
         } else {
-          return { type: GAME_SPEND_CREDITS, amount: action.card.cost };
+          return spendCredits({ amount: action.card.cost });
         }
+      })
+    )
+  );
+
+  applyCard$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(applyCard),
+      map((action) => {
+        return addEffectsToShip({ card: action.targetShip, effects: action.effects });
       })
     )
   );

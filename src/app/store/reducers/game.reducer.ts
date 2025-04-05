@@ -1,7 +1,20 @@
 import { createReducer, on } from '@ngrx/store';
-import { addToHand, discard, playCard, refuel, setPhase, setTurn, spendCredits, takeDamage, useFuel } from '../actions';
+import {
+  addToHand,
+  applyCard,
+  cancelCard,
+  discard,
+  playCard,
+  refuel,
+  setPhase,
+  setTurn,
+  spendCredits,
+  takeDamage,
+  useFuel,
+} from '../actions';
 import { GameState } from '../selectors';
 import { TurnPhase } from '@app/models';
+import { isShip } from '@app/utils';
 
 export const initialGameState: GameState = {
   turnPhase: TurnPhase.PlayerPlay,
@@ -12,6 +25,7 @@ export const initialGameState: GameState = {
   hand: [],
   deck: [],
   discard: [],
+  pendingCard: null,
 };
 
 const _gameReducer = createReducer(
@@ -25,7 +39,16 @@ const _gameReducer = createReducer(
   on(playCard, (state, action) => {
     let handCopy = [...state.hand];
     handCopy.splice(handCopy.indexOf(action.card), 1);
-    return { ...state, discard: [...state.discard, action.card], hand: handCopy };
+    if (isShip(action.card)) {
+      return { ...state, discard: [...state.discard, action.card], hand: handCopy };
+    }
+    return { ...state, hand: handCopy, pendingCard: action.card };
+  }),
+  on(applyCard, (state, action) => {
+    return { ...state, discard: [...state.discard, state.pendingCard], pendingCard: null };
+  }),
+  on(cancelCard, (state, action) => {
+    return { ...state, hand: [...state.hand, state.pendingCard], pendingCard: null };
   }),
   on(addToHand, (state, action) => {
     return { ...state, hand: [...state.hand, ...action.cards] };

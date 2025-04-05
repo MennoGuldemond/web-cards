@@ -7,10 +7,10 @@ import {
   destroyShip,
   endBattle,
   startBattle,
-  updateShip,
+  addEffectsToShip,
 } from '../actions';
 import { BattlefieldState } from '../selectors';
-import { asShip, asShipCard } from '@app/utils';
+import { asShip, mergeEffects } from '@app/utils';
 
 export const initialBattlefieldState: BattlefieldState = {
   playerShips: [],
@@ -26,9 +26,16 @@ const _battlefieldReducer = createReducer(
   on(addEnemies, (state, action) => {
     return { ...state, enemyShips: [...state.enemyShips, ...action.cards.map(asShip)] };
   }),
-  on(updateShip, (state, { card }) => ({
+  on(addEffectsToShip, (state, action) => ({
     ...state,
-    playerShips: state.playerShips.map((s) => (s.id === card.id ? card : s)),
+    playerShips: state.playerShips.map((s) =>
+      s.id === action.card.id
+        ? {
+            ...s,
+            effects: mergeEffects(s.effects, action.effects),
+          }
+        : s
+    ),
   })),
   on(damageShip, (state, { card, amount }) => {
     return {

@@ -3,14 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { pipe } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { SettingsService } from '@app/services';
-import {
-  getSettings,
-  setCardsOutdated,
-  setSettings,
-  SETTING_SET_CARDS_OUTDATED,
-  SETTING_SET_SETTINGS,
-  updateVersion,
-} from '../actions';
+import { getSettings, setCardsOutdated, setSettings, updateVersion } from '../actions';
 import { getFromLocalStorage, saveToLocalStorage } from '@app/utils/storage-utils';
 import { SettingState } from '../selectors';
 import { initialSettingState } from '../reducers';
@@ -30,7 +23,7 @@ export class SettingEffects {
       }),
       pipe(
         map((settings) => {
-          return { type: SETTING_SET_SETTINGS, settings: settings };
+          return setSettings({ settings: settings });
         })
       )
     )
@@ -64,7 +57,7 @@ export class SettingEffects {
       switchMap((action) => {
         return this.settingService.updateVersion().pipe(
           map(() => {
-            return { type: SETTING_SET_CARDS_OUTDATED, outDated: true };
+            return setCardsOutdated({ outdated: true });
           })
         );
       })

@@ -2,10 +2,17 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { Store } from '@ngrx/store';
-import { map, Observable, take } from 'rxjs';
+import { map, Observable, skip, take } from 'rxjs';
 import { Card, ShipCard, TurnPhase } from '@app/models';
-import { GameState, selectEnemyShips, selectGameState, selectHand, selectPlayerShips } from '@app/store/selectors';
-import { discard, drawCards, nextPhase, playCard, setPhase } from '@app/store/actions';
+import {
+  GameState,
+  selectEnemyShips,
+  selectGameState,
+  selectHand,
+  selectPendingCard,
+  selectPlayerShips,
+} from '@app/store/selectors';
+import { applyCard, discard, drawCards, nextPhase, playCard, setPhase } from '@app/store/actions';
 import { CardComponent } from '../card/card.component';
 import { ShipComponent } from '../ship/ship.component';
 import { asShipCard, isShip } from '@app/utils';
@@ -24,11 +31,15 @@ export class GameBoardComponent implements OnInit {
   hand$: Observable<Card[]>;
   playerShips$: Observable<ShipCard[]>;
   enemyShips$: Observable<ShipCard[]>;
+  pendingCard$: Observable<Card>;
 
   readonly playerPhase = TurnPhase.PlayerPlay;
 
   draggingCard: Card = null;
   isOverBattlefield = false;
+
+  guideText = 'Drag a ship card here to deploy it!';
+  showGuideText = true;
 
   constructor() {
     this.gameState$ = this.store.select(selectGameState);
@@ -36,11 +47,20 @@ export class GameBoardComponent implements OnInit {
     this.playerShips$ = this.store.select(selectPlayerShips);
     this.enemyShips$ = this.store.select(selectEnemyShips);
     this.gameState$ = this.store.select(selectGameState);
+    this.pendingCard$ = this.store.select(selectPendingCard);
   }
 
   ngOnInit() {
     this.store.dispatch(drawCards({ amount: 5 }));
     this.store.dispatch(setPhase({ phase: TurnPhase.EnemyPlay }));
+
+    this.pendingCard$.pipe(skip(1)).subscribe((pendingCard) => {
+      if (pendingCard) {
+        this.setGuide('Choose a target');
+      } else {
+        this.clearGuide();
+      }
+    });
   }
 
   startDrag(card: Card) {
@@ -66,13 +86,20 @@ export class GameBoardComponent implements OnInit {
   dropInUse(event: CdkDragDrop<any, any, any>) {
     const card = event.item.data;
     if (!this.isShip(card)) {
-      // TODO: if the card needs a target, add logic and user input for this
       this.store.dispatch(playCard({ card: card }));
     }
   }
 
   dropInSalvage(event: CdkDragDrop<any, any, any>) {
     this.store.dispatch(discard({ card: event.item.data }));
+  }
+
+  onShipClicked(ship: ShipCard) {
+    this.pendingCard$.pipe(take(1)).subscribe((pendingCard) => {
+      if (pendingCard) {
+        this.store.dispatch(applyCard({ targetShip: ship, effects: pendingCard.effects }));
+      }
+    });
   }
 
   endTurn() {
@@ -98,5 +125,14 @@ export class GameBoardComponent implements OnInit {
 
   getShipCard(card: Card): ShipCard {
     return asShipCard(card);
+  }
+
+  setGuide(text: string) {
+    this.guideText = text;
+    this.showGuideText = true;
+  }
+
+  clearGuide() {
+    this.showGuideText = false;
   }
 }

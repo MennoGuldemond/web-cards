@@ -1,4 +1,4 @@
-import { Card, CardType, ShipCard } from '@app/models';
+import { Card, CardEffect, CardType, ShipCard } from '@app/models';
 import { v4 as uuidv4 } from 'uuid';
 
 export function isShip(card: Card): boolean {
@@ -28,4 +28,24 @@ export function asShip(card: Card): ShipCard {
 /** Retruns the card with a new random id. */
 export function withRandomId(card: Card): Card {
   return { ...card, id: uuidv4() };
+}
+
+export function mergeEffects(existing: CardEffect[], incoming: CardEffect[]): CardEffect[] {
+  const result = [...existing];
+
+  for (const newEffect of incoming) {
+    const index = result.findIndex((e) => e.name === newEffect.name);
+    if (index > -1) {
+      // Merge the value into the existing effect
+      result[index] = {
+        ...result[index],
+        value: result[index].value + newEffect.value,
+      };
+    } else {
+      // Add new effect
+      result.push({ ...newEffect });
+    }
+  }
+
+  return result;
 }

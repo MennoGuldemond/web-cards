@@ -10,6 +10,7 @@ export interface GameState {
   hand: Card[];
   deck: Card[];
   discard: Card[];
+  pendingCard: Card;
 }
 
 export const selectGameState = createFeatureSelector<GameState>('game');
@@ -19,3 +20,4 @@ export const selectArkHealth = createSelector(selectGameState, (state) => state.
 export const selectCredits = createSelector(selectGameState, (state) => state.credits);
 export const selectFuel = createSelector(selectGameState, (state) => state.fuel);
 export const selectHand = createSelector(selectGameState, (state) => state.hand);
+export const selectPendingCard = createSelector(selectGameState, (state) => state.pendingCard);
