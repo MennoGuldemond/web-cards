@@ -15,12 +15,14 @@ import {
   addToHand,
   setTurn,
   addEffectsToShip,
+  processEndOfTurnEffects,
+  damageShip,
 } from '../actions';
 import { map, tap, withLatestFrom } from 'rxjs';
 import { getShipElement, getShortDescription, isShip, withRandomId } from '@app/utils';
 import { Store } from '@ngrx/store';
-import { selectAllPlayerCards, selectPhase, selectTurn } from '../selectors';
-import { ShipCard, TurnPhase } from '@app/models';
+import { selectAllPlayerCards, selectAllShips, selectPhase, selectTurn } from '../selectors';
+import { Effects, ShipCard, TurnPhase } from '@app/models';
 import { FloatEffectService } from '@app/services';
 
 @Injectable()
@@ -78,7 +80,10 @@ export class GameEffects {
     this.actions$.pipe(
       ofType(nextTurn),
       withLatestFrom(this.store.select(selectTurn)),
-      map(([action, turnNumber]) => setTurn({ number: turnNumber + 1 }))
+      map(([action, turnNumber]) => {
+        this.store.dispatch(processEndOfTurnEffects());
+        return setTurn({ number: turnNumber + 1 });
+      })
     )
   );
 
@@ -117,5 +122,24 @@ export class GameEffects {
         return addEffectsToShip({ card: action.targetShip, effects: action.effects });
       })
     )
+  );
+
+  processEndOfTurnEffects$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(processEndOfTurnEffects),
+        withLatestFrom(this.store.select(selectAllShips)),
+        map(([action, allShips]) => {
+          // TODO: refactor to function
+          allShips.forEach((ship) => {
+            ship.effects.forEach((e) => {
+              if (e.name === Effects.regeneration) {
+                this.store.dispatch(damageShip({ card: ship, amount: -e.value }));
+              }
+            });
+          });
+        })
+      ),
+    { dispatch: false }
   );
 }

@@ -10,3 +10,7 @@ export interface BattlefieldState {
 export const selectBattlefieldState = createFeatureSelector<BattlefieldState>('battlefield');
 export const selectPlayerShips = createSelector(selectBattlefieldState, (state) => state.playerShips);
 export const selectEnemyShips = createSelector(selectBattlefieldState, (state) => state.enemyShips);
+export const selectAllShips = createSelector(selectBattlefieldState, (state) => [
+  ...state.enemyShips,
+  ...state.playerShips,
+]);

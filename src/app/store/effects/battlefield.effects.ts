@@ -41,6 +41,9 @@ export class BattlefieldEffects {
       this.actions$.pipe(
         ofType(damageShip),
         map((action) => {
+          const isHeal = action.amount < 0;
+          const text = `health ${isHeal ? '+' : '-'}${isHeal ? action.amount * -1 : action.amount}`;
+          this.floatEffectService.show(text, getShipElement(action.card.id), isHeal);
           if (action.card.ship.health <= action.amount) {
             this.store.dispatch(destroyShip({ card: action.card }));
           }
@@ -77,7 +80,6 @@ export class BattlefieldEffects {
           const defender = attacker.ship.isEnemy ? battlefieldState.playerShips[0] : battlefieldState.enemyShips[0];
 
           if (calculateHit(attacker, defender)) {
-            this.floatEffectService.show(`-${attacker.ship.attack}`, getShipElement(defender.id));
             this.store.dispatch(damageShip({ card: defender, amount: attacker.ship.attack }));
           } else {
             this.floatEffectService.show('miss', getShipElement(defender.id));
