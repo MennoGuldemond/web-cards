@@ -1,7 +1,9 @@
+@use '../../../vars';
+
 .float {
   position: fixed;
-  font-size: 24px;
-  color: red;
+  font-size: 2rem;
+  color: vars.$space-red;
   animation: float-up 1s ease-out forwards;
   pointer-events: none;
   font-weight: bold;
