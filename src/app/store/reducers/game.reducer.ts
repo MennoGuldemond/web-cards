@@ -20,8 +20,8 @@ export const initialGameState: GameState = {
   turnPhase: TurnPhase.PlayerPlay,
   turnNumber: 1,
   arkHealth: 20,
-  credits: 2,
-  fuel: 5,
+  credits: 3,
+  fuel: 3,
   hand: [],
   deck: [],
   discard: [],
@@ -34,7 +34,7 @@ const _gameReducer = createReducer(
     return { ...state, turnPhase: action.phase };
   }),
   on(setTurn, (state, action) => {
-    return { ...state, turnNumber: action.number };
+    return { ...state, turnNumber: action.number, credits: initialGameState.credits, fuel: initialGameState.fuel };
   }),
   on(playCard, (state, action) => {
     let handCopy = [...state.hand];
