@@ -24,7 +24,7 @@ export class AuthService {
     );
   }
 
-  googleSignin(): Observable<AppUser> {
+  googleSignin(): Observable<{ user: AppUser; isNewUser: boolean }> {
     return from(this.compatAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider())).pipe(
       switchMap(() => this.getAuthUser()), // Get the authenticated user
       switchMap((user) => this.updateUserData(user)) // Update Firestore with user data
@@ -35,13 +35,13 @@ export class AuthService {
     return from(this.auth.signOut());
   }
 
-  updateUserData(user: User): Observable<AppUser> {
+  updateUserData(user: User): Observable<{ user: AppUser; isNewUser: boolean }> {
     const docRef = doc(this.firestore, 'users', user.uid);
 
     return from(getDoc(docRef)).pipe(
       switchMap((docSnapshot) => {
         if (docSnapshot.exists()) {
-          return of(docSnapshot.data() as AppUser);
+          return of({ user: docSnapshot.data() as AppUser, isNewUser: false });
         }
 
         const userData: AppUser = {
@@ -52,7 +52,7 @@ export class AuthService {
           createdOn: new Date(),
         };
 
-        return from(setDoc(docRef, userData)).pipe(map(() => userData));
+        return from(setDoc(docRef, userData)).pipe(map(() => ({ user: userData, isNewUser: true })));
       })
     );
   }

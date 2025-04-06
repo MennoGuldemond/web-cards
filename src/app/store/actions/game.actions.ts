@@ -1,4 +1,4 @@
-import { Card, CardEffect, ShipCard, TurnPhase } from '@app/models';
+import { Card, CardEffect, Deck, ShipCard, TurnPhase } from '@app/models';
 import { createAction, props } from '@ngrx/store';
 
 export const GAME_NEXT_PHASE = '[Game] nextPhase';

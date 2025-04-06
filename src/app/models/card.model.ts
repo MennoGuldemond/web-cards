@@ -9,6 +9,7 @@ export interface Card {
   cost: number;
   cardType: CardType;
   rarity: CardRarity;
+  timesInBaseDeck: number;
 }
 
 export interface CardEffect {
