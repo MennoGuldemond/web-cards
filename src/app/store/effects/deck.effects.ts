@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { from, pipe } from 'rxjs';
+import { from } from 'rxjs';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { DeckService } from '@app/services';
-import { createBaseDeck, getDeck, getDeckCards, saveDeck, setCards, setDeck } from '../actions';
+import { createBaseDeck, getDeck, getDeckCards, saveDeck, setDeck, setDeckCards } from '../actions';
 import { Store } from '@ngrx/store';
 import { selectCards, selectDeckData, selectUser } from '../selectors';
 import { Deck } from '@app/models';
@@ -21,12 +21,16 @@ export class DeckEffects {
       switchMap(([action, user]) => {
         return this.deckService.get(user.uid);
       }),
-      pipe(
-        map((deck) => {
-          this.store.dispatch(getDeckCards());
-          return setDeck({ deck: deck });
-        })
-      )
+      map((deck) => {
+        return setDeck({ deck: deck });
+      })
+    )
+  );
+
+  setDeck$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(setDeck),
+      map((action) => getDeckCards())
     )
   );
 
@@ -35,11 +39,11 @@ export class DeckEffects {
       ofType(getDeckCards),
       withLatestFrom(this.store.select(selectDeckData), this.store.select(selectCards)),
       map(([action, deckData, cards]) => {
-        if (!deckData || !deckData.cardIds || !cards) {
-          return setCards({ cards: [] }); // fallback if data not ready
+        let deckCards = [];
+        if (deckData?.cardIds && cards) {
+          deckData.cardIds.forEach((id) => deckCards.push(cards.find((c) => c.id === id)));
         }
-        const deckCards = cards.filter((card) => deckData.cardIds.includes(card.id));
-        return setCards({ cards: deckCards });
+        return setDeckCards({ cards: deckCards });
       })
     )
   );

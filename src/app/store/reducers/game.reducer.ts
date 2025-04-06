@@ -6,6 +6,8 @@ import {
   discard,
   playCard,
   refuel,
+  removeFromGameDeck,
+  setGameDeck,
   setPhase,
   setTurn,
   spendCredits,
@@ -22,8 +24,8 @@ export const initialGameState: GameState = {
   arkHealth: 20,
   credits: 3,
   fuel: 3,
-  hand: [],
   deck: [],
+  hand: [],
   discard: [],
   pendingCard: null,
 };
@@ -69,7 +71,14 @@ const _gameReducer = createReducer(
   }),
   on(refuel, (state, action) => {
     return { ...state, fuel: state.fuel + action.amount };
-  })
+  }),
+  on(setGameDeck, (state, action) => {
+    return { ...state, deck: action.cards };
+  }),
+  on(removeFromGameDeck, (state, { amount }) => ({
+    ...state,
+    deck: state.deck.slice(amount),
+  }))
 );
 
 export function gameReducer(state: any, action: any): GameState {

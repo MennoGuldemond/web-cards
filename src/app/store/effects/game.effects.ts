@@ -17,11 +17,14 @@ import {
   addEffectsToShip,
   processEndOfTurnEffects,
   damageShip,
+  startGame,
+  setGameDeck,
+  removeFromGameDeck,
 } from '../actions';
 import { map, tap, withLatestFrom } from 'rxjs';
-import { getShipElement, getShortDescription, isShip, withRandomId } from '@app/utils';
+import { getShipElement, getShortDescription, isShip, shuffleArray, withRandomId } from '@app/utils';
 import { Store } from '@ngrx/store';
-import { selectAllPlayerCards, selectAllShips, selectPhase, selectTurn } from '../selectors';
+import { selectAllShips, selectDeckCards, selectGameDeck, selectPhase, selectTurn } from '../selectors';
 import { Effects, ShipCard, TurnPhase } from '@app/models';
 import { FloatEffectService } from '@app/services';
 
@@ -30,6 +33,19 @@ export class GameEffects {
   private store = inject(Store);
   private actions$ = inject(Actions);
   private floatEffectService = inject(FloatEffectService);
+
+  startGame$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(startGame),
+      withLatestFrom(this.store.select(selectDeckCards)),
+      map(([action, deckCards]) => {
+        const shuffled = shuffleArray([...deckCards]); // clone + shuffle
+        this.store.dispatch(setGameDeck({ cards: shuffled }));
+        this.store.dispatch(setPhase({ phase: TurnPhase.EnemyPlay }));
+        return drawCards({ amount: 3 });
+      })
+    )
+  );
 
   nextPhase$ = createEffect(() =>
     this.actions$.pipe(
@@ -90,9 +106,10 @@ export class GameEffects {
   drawCards$ = createEffect(() =>
     this.actions$.pipe(
       ofType(drawCards),
-      withLatestFrom(this.store.select(selectAllPlayerCards)),
-      map(([action, playerCards]) => {
-        const toDraw = playerCards.slice(0, Math.min(action.amount, playerCards.length)).map(withRandomId);
+      withLatestFrom(this.store.select(selectGameDeck)),
+      map(([action, deck]) => {
+        const toDraw = deck.slice(0, Math.min(action.amount, deck.length)).map(withRandomId);
+        this.store.dispatch(removeFromGameDeck({ amount: toDraw.length }));
         return addToHand({ cards: toDraw });
       })
     )

@@ -79,10 +79,12 @@ export class BattlefieldEffects {
           const attacker = battlefieldState.battleQue[0];
           const defender = attacker.ship.isEnemy ? battlefieldState.playerShips[0] : battlefieldState.enemyShips[0];
 
-          if (calculateHit(attacker, defender)) {
-            this.store.dispatch(damageShip({ card: defender, amount: attacker.ship.attack }));
-          } else {
-            this.floatEffectService.show('miss', getShipElement(defender.id));
+          if (attacker && defender) {
+            if (calculateHit(attacker, defender)) {
+              this.store.dispatch(damageShip({ card: defender, amount: attacker.ship.attack }));
+            } else {
+              this.floatEffectService.show('miss', getShipElement(defender.id));
+            }
           }
 
           return of(attackEnd()).pipe(delay(this.BATTLE_DELAY));
