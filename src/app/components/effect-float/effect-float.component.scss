@@ -17,6 +17,10 @@
   color: vars.$space-red;
 }
 
+.float.neutral {
+  color: vars.$card-cyan;
+}
+
 @keyframes float-up {
   0% {
     opacity: 1;

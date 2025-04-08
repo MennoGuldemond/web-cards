@@ -34,7 +34,7 @@ import {
 } from '@app/utils';
 import { Action, Store } from '@ngrx/store';
 import { selectAllShips, selectDeckCards, selectGameDeck, selectPhase, selectTurn } from '../selectors';
-import { Effects, ShipCard, TurnPhase } from '@app/models';
+import { EffectColor, Effects, ShipCard, TurnPhase } from '@app/models';
 import { FloatEffectService } from '@app/services';
 
 @Injectable()
@@ -153,7 +153,11 @@ export class GameEffects {
       ofType(applyCard),
       map((action) => {
         action.effects.forEach((e) => {
-          this.floatEffectService.show(getShortDescription(e), getShipElement(action.targetShip.id), true);
+          this.floatEffectService.show(
+            getShortDescription(e),
+            getShipElement(action.targetShip.id),
+            EffectColor.positive
+          );
         });
         return addEffectsToShip({ card: action.targetShip, effects: action.effects });
       })

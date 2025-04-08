@@ -11,6 +11,12 @@ export enum CardRarity {
   rare = 'Rare',
 }
 
+export enum EffectColor {
+  positive = 'Positive',
+  neutral = 'Neutral',
+  negative = 'Negative',
+}
+
 export enum Effects {
   initiative = 'Initiative', // The lower the initiative, the earlier you get your turn in battle
   health = 'Health', // Add max health
