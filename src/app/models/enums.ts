@@ -27,6 +27,7 @@ export enum Effects {
   retaliate = 'Retaliate', // Deals damage back to the attacker
   logistics = 'Logistics', // Draw extra cards
   gravityWell = 'Gravity well', // Slows initiative of enemy ships
+  consume = 'Consume', // Card can be used once per game
 }
 
 export enum TurnPhase {

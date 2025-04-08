@@ -7,6 +7,7 @@ import {
   discard,
   playCard,
   refuel,
+  removeCardFromGameDeck,
   removeFromGameDeck,
   setGameDeck,
   setPhase,
@@ -16,8 +17,8 @@ import {
   useFuel,
 } from '../actions';
 import { GameState } from '../selectors';
-import { TurnPhase } from '@app/models';
-import { isEconomic, isShip } from '@app/utils';
+import { Effects, TurnPhase } from '@app/models';
+import { hasEffect, isEconomic, isShip } from '@app/utils';
 
 export const initialGameState: GameState = {
   turnPhase: TurnPhase.PlayerPlay,
@@ -33,54 +34,59 @@ export const initialGameState: GameState = {
 
 const _gameReducer = createReducer(
   initialGameState,
-  on(setPhase, (state, action) => {
-    return { ...state, turnPhase: action.phase };
+  on(setPhase, (state, { phase }) => {
+    return { ...state, turnPhase: phase };
   }),
-  on(setTurn, (state, action) => {
-    return { ...state, turnNumber: action.number, credits: initialGameState.credits, fuel: initialGameState.fuel };
+  on(setTurn, (state, { number }) => {
+    return { ...state, turnNumber: number, credits: initialGameState.credits, fuel: initialGameState.fuel };
   }),
-  on(playCard, (state, action) => {
+  on(playCard, (state, { card }) => {
     let handCopy = [...state.hand];
-    handCopy.splice(handCopy.indexOf(action.card), 1);
-    if (isShip(action.card) || isEconomic(action.card)) {
-      return { ...state, discard: [...state.discard, action.card], hand: handCopy };
+    handCopy.splice(handCopy.indexOf(card), 1);
+    if (isShip(card) || isEconomic(card)) {
+      return { ...state, discard: [...state.discard, card], hand: handCopy };
     }
-    return { ...state, hand: handCopy, pendingCard: action.card };
+    return { ...state, hand: handCopy, pendingCard: card };
   }),
-  on(applyCard, (state, action) => {
+  on(applyCard, (state) => {
     return { ...state, discard: [...state.discard, state.pendingCard], pendingCard: null };
   }),
-  on(cancelCard, (state, action) => {
+  on(cancelCard, (state) => {
     return { ...state, hand: [...state.hand, state.pendingCard], pendingCard: null };
   }),
-  on(addToHand, (state, action) => {
-    return { ...state, hand: [...state.hand, ...action.cards] };
+  on(addToHand, (state, { cards }) => {
+    return { ...state, hand: [...state.hand, ...cards] };
   }),
-  on(discard, (state, action) => {
+  on(discard, (state, { card }) => {
     let handCopy = [...state.hand];
-    handCopy.splice(handCopy.indexOf(action.card), 1);
-    return { ...state, hand: handCopy, discard: [...state.discard, action.card] };
+    handCopy.splice(handCopy.indexOf(card), 1);
+    return { ...state, hand: handCopy, discard: [...state.discard, card] };
   }),
-  on(takeDamage, (state, action) => {
-    return { ...state, arkHealth: state.arkHealth - action.amount };
+  on(takeDamage, (state, { amount }) => {
+    return { ...state, arkHealth: state.arkHealth - amount };
   }),
-  on(spendCredits, (state, action) => {
-    return { ...state, credits: state.credits - action.amount };
+  on(spendCredits, (state, { amount }) => {
+    return { ...state, credits: state.credits - amount };
   }),
-  on(useFuel, (state, action) => {
-    return { ...state, fuel: state.fuel - action.amount };
+  on(useFuel, (state, { amount }) => {
+    return { ...state, fuel: state.fuel - amount };
   }),
-  on(refuel, (state, action) => {
-    return { ...state, fuel: state.fuel + action.amount };
+  on(refuel, (state, { amount }) => {
+    return { ...state, fuel: state.fuel + amount };
   }),
-  on(setGameDeck, (state, action) => {
-    return { ...state, deck: action.cards };
+  on(setGameDeck, (state, { cards }) => {
+    return { ...state, deck: cards };
   }),
   on(removeFromGameDeck, (state, { amount }) => ({
     ...state,
     deck: state.deck.slice(amount),
   })),
-  on(clearDiscard, (state, action) => ({
+  on(removeCardFromGameDeck, (state, { card }) => {
+    let deckCopy = [...state.deck];
+    deckCopy.splice(deckCopy.indexOf(card), 1);
+    return { ...state, deck: deckCopy };
+  }),
+  on(clearDiscard, (state) => ({
     ...state,
     discard: initialGameState.discard,
   }))

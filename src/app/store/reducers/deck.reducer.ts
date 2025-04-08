@@ -9,8 +9,8 @@ export const initialDeckState: DeckState = {
 
 const _deckReducer = createReducer(
   initialDeckState,
-  on(setDeck, (state, action) => ({ ...state, deck: action.deck })),
-  on(setDeckCards, (state, action) => ({ ...state, cards: action.cards }))
+  on(setDeck, (state, { deck }) => ({ ...state, deck: deck })),
+  on(setDeckCards, (state, { cards }) => ({ ...state, cards: cards }))
 );
 
 export function deckReducer(state: any, action: any): DeckState {

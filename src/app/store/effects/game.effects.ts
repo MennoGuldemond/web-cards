@@ -21,6 +21,7 @@ import {
   setGameDeck,
   removeFromGameDeck,
   clearDiscard,
+  removeCardFromGameDeck,
 } from '../actions';
 import { from, map, switchMap, tap, withLatestFrom } from 'rxjs';
 import {
@@ -159,6 +160,10 @@ export class GameEffects {
           actions.push(useFuel({ amount: action.card.cost }));
         } else {
           if (isEconomic(action.card)) {
+            if (hasEffect(action.card, Effects.consume)) {
+              // TODO: FIX this (removes wrong card)
+              actions.push(removeCardFromGameDeck({ card: action.card }));
+            }
             if (hasEffect(action.card, Effects.logistics)) {
               const drawAmount = getEffect(action.card, Effects.logistics).value;
               actions.push(drawCards({ amount: drawAmount }));

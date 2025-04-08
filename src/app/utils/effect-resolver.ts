@@ -35,6 +35,8 @@ export function getDescription(effect: CardEffect): string {
       return `Slow initiative of enemy ships by ${effect.value}.`;
     case Effects.shield:
       return `Absorbs ${effect.value} damage before health is affected.`;
+    case Effects.consume:
+      return `Get's consumed on use.`;
     default:
       return '';
   }
@@ -43,21 +45,23 @@ export function getDescription(effect: CardEffect): string {
 export function getShortDescription(effect: CardEffect): string {
   switch (effect.name) {
     case Effects.health:
-      return `Health ${effect.value > 0 ? '+' + effect.value : '-' + effect.value}`;
+      return `Health ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}`;
     case Effects.initiative:
-      return `Initiative ${effect.value > 0 ? '+' + effect.value : '-' + effect.value}`;
+      return `Initiative ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}`;
     case Effects.dodge:
-      return `Dodge ${effect.value > 0 ? '+' + effect.value : '-' + effect.value}%`;
+      return `Dodge ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}%`;
     case Effects.regeneration:
-      return `Regeneration ${effect.value > 0 ? '+' + effect.value : '-' + effect.value}`;
+      return `Regeneration ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}`;
     case Effects.logistics:
       return `Logistics ${effect.value}`;
     case Effects.retaliate:
-      return `Retaliate ${effect.value > 0 ? '+' + effect.value : '-' + effect.value}`;
+      return `Retaliate ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}`;
     case Effects.gravityWell:
-      return `Gravity Well ${effect.value > 0 ? '+' + effect.value : '-' + effect.value}`;
+      return `Gravity Well ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}`;
     case Effects.shield:
-      return `Shield ${effect.value > 0 ? '+' + effect.value : '-' + effect.value}`;
+      return `Shield ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}`;
+    case Effects.consume:
+      return `Consume`;
     default:
       return '';
   }
