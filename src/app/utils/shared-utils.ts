@@ -12,7 +12,7 @@ export function deepEqual(obj1: any, obj2: any): boolean {
 
   for (let key of keys1) {
     if (!keys2.includes(key)) return false;
-    if (!this.deepEqual(obj1[key], obj2[key])) return false;
+    if (!deepEqual(obj1[key], obj2[key])) return false;
   }
   return true;
 }
