@@ -16,7 +16,7 @@ import {
 } from '../actions';
 import { GameState } from '../selectors';
 import { TurnPhase } from '@app/models';
-import { isShip } from '@app/utils';
+import { isEconomic, isShip } from '@app/utils';
 
 export const initialGameState: GameState = {
   turnPhase: TurnPhase.PlayerPlay,
@@ -41,7 +41,7 @@ const _gameReducer = createReducer(
   on(playCard, (state, action) => {
     let handCopy = [...state.hand];
     handCopy.splice(handCopy.indexOf(action.card), 1);
-    if (isShip(action.card)) {
+    if (isShip(action.card) || isEconomic(action.card)) {
       return { ...state, discard: [...state.discard, action.card], hand: handCopy };
     }
     return { ...state, hand: handCopy, pendingCard: action.card };

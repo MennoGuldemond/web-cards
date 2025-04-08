@@ -21,9 +21,18 @@ import {
   setGameDeck,
   removeFromGameDeck,
 } from '../actions';
-import { map, tap, withLatestFrom } from 'rxjs';
-import { getShipElement, getShortDescription, isShip, shuffleArray, withRandomId } from '@app/utils';
-import { Store } from '@ngrx/store';
+import { from, map, switchMap, tap, withLatestFrom } from 'rxjs';
+import {
+  getEffect,
+  getShipElement,
+  getShortDescription,
+  hasEffect,
+  isEconomic,
+  isShip,
+  shuffleArray,
+  withRandomId,
+} from '@app/utils';
+import { Action, Store } from '@ngrx/store';
 import { selectAllShips, selectDeckCards, selectGameDeck, selectPhase, selectTurn } from '../selectors';
 import { Effects, ShipCard, TurnPhase } from '@app/models';
 import { FloatEffectService } from '@app/services';
@@ -118,13 +127,23 @@ export class GameEffects {
   playCard$ = createEffect(() =>
     this.actions$.pipe(
       ofType(playCard),
-      map((action) => {
+      switchMap((action) => {
+        const actions: Action[] = [];
+
         if (isShip(action.card)) {
-          this.store.dispatch(addPlayerShip({ card: action.card as ShipCard }));
-          return useFuel({ amount: action.card.cost });
+          actions.push(addPlayerShip({ card: action.card as ShipCard }));
+          actions.push(useFuel({ amount: action.card.cost }));
         } else {
-          return spendCredits({ amount: action.card.cost });
+          if (isEconomic(action.card)) {
+            if (hasEffect(action.card, Effects.logistics)) {
+              const drawAmount = getEffect(action.card, Effects.logistics).value;
+              actions.push(drawCards({ amount: drawAmount }));
+            }
+          }
+          actions.push(spendCredits({ amount: action.card.cost }));
         }
+
+        return from(actions); // emit actions one-by-one
       })
     )
   );
