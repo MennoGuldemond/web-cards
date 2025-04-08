@@ -3,6 +3,7 @@ import {
   addToHand,
   applyCard,
   cancelCard,
+  clearDiscard,
   discard,
   playCard,
   refuel,
@@ -78,6 +79,10 @@ const _gameReducer = createReducer(
   on(removeFromGameDeck, (state, { amount }) => ({
     ...state,
     deck: state.deck.slice(amount),
+  })),
+  on(clearDiscard, (state, action) => ({
+    ...state,
+    discard: initialGameState.discard,
   }))
 );
 

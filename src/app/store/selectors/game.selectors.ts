@@ -22,3 +22,4 @@ export const selectFuel = createSelector(selectGameState, (state) => state.fuel)
 export const selectHand = createSelector(selectGameState, (state) => state.hand);
 export const selectPendingCard = createSelector(selectGameState, (state) => state.pendingCard);
 export const selectGameDeck = createSelector(selectGameState, (state) => state.deck);
+export const selectDiscard = createSelector(selectGameState, (state) => state.discard);

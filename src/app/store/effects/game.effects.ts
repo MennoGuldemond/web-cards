@@ -20,6 +20,7 @@ import {
   startGame,
   setGameDeck,
   removeFromGameDeck,
+  clearDiscard,
 } from '../actions';
 import { from, map, switchMap, tap, withLatestFrom } from 'rxjs';
 import {
@@ -33,8 +34,8 @@ import {
   withRandomId,
 } from '@app/utils';
 import { Action, Store } from '@ngrx/store';
-import { selectAllShips, selectDeckCards, selectGameDeck, selectPhase, selectTurn } from '../selectors';
-import { EffectColor, Effects, ShipCard, TurnPhase } from '@app/models';
+import { selectAllShips, selectDeckCards, selectDiscard, selectGameDeck, selectPhase, selectTurn } from '../selectors';
+import { Card, EffectColor, Effects, ShipCard, TurnPhase } from '@app/models';
 import { FloatEffectService } from '@app/services';
 
 @Injectable()
@@ -115,11 +116,34 @@ export class GameEffects {
   drawCards$ = createEffect(() =>
     this.actions$.pipe(
       ofType(drawCards),
-      withLatestFrom(this.store.select(selectGameDeck)),
-      map(([action, deck]) => {
-        const toDraw = deck.slice(0, Math.min(action.amount, deck.length)).map(withRandomId);
-        this.store.dispatch(removeFromGameDeck({ amount: toDraw.length }));
-        return addToHand({ cards: toDraw });
+      withLatestFrom(this.store.select(selectGameDeck), this.store.select(selectDiscard)),
+      map(([action, deck, discardPile]) => {
+        let cardsToDraw = action.amount;
+        const drawnCards: Card[] = [];
+
+        // Draw from deck
+        const fromDeck = deck.slice(0, cardsToDraw);
+        drawnCards.push(...fromDeck.map(withRandomId));
+        cardsToDraw -= fromDeck.length;
+
+        // Remove cards from deck
+        this.store.dispatch(removeFromGameDeck({ amount: fromDeck.length }));
+
+        // If not enough, shuffle discard and draw remaining cards
+        if (cardsToDraw > 0 && discardPile.length > 0) {
+          const shuffled = shuffleArray([...discardPile]);
+          const fromDiscard = shuffled.slice(0, cardsToDraw);
+          drawnCards.push(...fromDiscard.map(withRandomId));
+
+          // Add remaning shuffled cards to the deck
+          this.store.dispatch(setGameDeck({ cards: shuffled }));
+          this.store.dispatch(removeFromGameDeck({ amount: cardsToDraw }));
+
+          // Dispatch removal of cards from discard (optional if discard is cleared)
+          this.store.dispatch(clearDiscard());
+        }
+
+        return addToHand({ cards: drawnCards });
       })
     )
   );
