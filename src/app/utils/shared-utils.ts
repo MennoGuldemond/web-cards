@@ -1,5 +1,6 @@
 import { ElementRef } from '@angular/core';
 
+/** Returns if two object are equal in terms of properties and values. */
 export function deepEqual(obj1: any, obj2: any): boolean {
   if (obj1 === obj2) return true;
   if (typeof obj1 !== 'object' || obj1 === null || typeof obj2 !== 'object' || obj2 === null) {
@@ -17,11 +18,13 @@ export function deepEqual(obj1: any, obj2: any): boolean {
   return true;
 }
 
+/** Returns the DOM element of a ship given it's Id. */
 export function getShipElement(shipId: string): ElementRef | null {
   const el = document.querySelector(`[data-ship-id="${shipId}"]`);
   return el ? new ElementRef(el) : null;
 }
 
+/** Returns the array shuffled randomly. */
 export function shuffleArray<T>(array: T[]): T[] {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
