@@ -27,6 +27,14 @@ export function getDescription(effect: CardEffect): string {
       return `Cannot be attacked directly`;
     case Effects.regeneration:
       return `Restore ${effect.value} HP after each round.`;
+    case Effects.logistics:
+      return `Draw ${effect.value} cards.`;
+    case Effects.retaliate:
+      return `Deal ${effect.value} damage back to the attacker.`;
+    case Effects.gravityWell:
+      return `Slow initiative of enemy ships by ${effect.value}.`;
+    case Effects.shield:
+      return `Absorbs ${effect.value} damage before health is affected.`;
     default:
       return '';
   }
@@ -42,6 +50,14 @@ export function getShortDescription(effect: CardEffect): string {
       return `Dodge ${effect.value > 0 ? '+' + effect.value : '-' + effect.value}%`;
     case Effects.regeneration:
       return `Regeneration ${effect.value > 0 ? '+' + effect.value : '-' + effect.value}`;
+    case Effects.logistics:
+      return `Logistics ${effect.value}`;
+    case Effects.retaliate:
+      return `Retaliate ${effect.value > 0 ? '+' + effect.value : '-' + effect.value}`;
+    case Effects.gravityWell:
+      return `Gravity Well ${effect.value > 0 ? '+' + effect.value : '-' + effect.value}`;
+    case Effects.shield:
+      return `Shield ${effect.value > 0 ? '+' + effect.value : '-' + effect.value}`;
     default:
       return '';
   }
