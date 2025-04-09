@@ -4,7 +4,8 @@ import {
   applyCard,
   cancelCard,
   clearDiscard,
-  discard,
+  discardCard,
+  discardHand,
   playCard,
   refuel,
   removeCardFromDrawPile,
@@ -63,10 +64,13 @@ const _gameReducer = createReducer(
   on(addToHand, (state, { cards }) => {
     return { ...state, hand: [...state.hand, ...cards] };
   }),
-  on(discard, (state, { card }) => {
+  on(discardCard, (state, { card }) => {
     let handCopy = [...state.hand];
     handCopy.splice(handCopy.indexOf(card), 1);
     return { ...state, hand: handCopy, discardPile: [...state.discardPile, card] };
+  }),
+  on(discardHand, (state) => {
+    return { ...state, hand: [], discardPile: [...state.discardPile, ...state.hand] };
   }),
   on(takeDamage, (state, { amount }) => {
     return { ...state, arkHealth: state.arkHealth - amount };
@@ -94,7 +98,7 @@ const _gameReducer = createReducer(
   }),
   on(clearDiscard, (state) => ({
     ...state,
-    discardPile: initialGameState.discardPile,
+    discardPile: [],
   }))
 );
 

@@ -18,7 +18,8 @@ export const GAME_PLAY_CARD = '[Game] playCard';
 export const GAME_APPLY_CARD = '[Game] applyCard';
 export const GAME_CANCEL_CARD = '[Game] cancelCard';
 export const GAME_ADD_TO_HAND = '[Game] addToHand';
-export const GAME_DISCARD = '[Game] discard';
+export const GAME_DISCARD_CARD = '[Game] discardCard';
+export const GAME_DISCARD_HAND = '[Game] discardHand';
 export const GAME_CLEAR_DISCARD = '[Game] clearDiscard';
 
 export const GAME_TAKE_DAMAGE = '[Game] takeDamage';
@@ -43,7 +44,8 @@ export const playCard = createAction(GAME_PLAY_CARD, props<{ card: Card }>());
 export const applyCard = createAction(GAME_APPLY_CARD, props<{ targetShip: ShipCard; effects: CardEffect[] }>());
 export const cancelCard = createAction(GAME_CANCEL_CARD);
 export const addToHand = createAction(GAME_ADD_TO_HAND, props<{ cards: Card[] }>());
-export const discard = createAction(GAME_DISCARD, props<{ card: Card }>());
+export const discardCard = createAction(GAME_DISCARD_CARD, props<{ card: Card }>());
+export const discardHand = createAction(GAME_DISCARD_HAND);
 export const clearDiscard = createAction(GAME_CLEAR_DISCARD);
 
 export const takeDamage = createAction(GAME_TAKE_DAMAGE, props<{ amount: number }>());

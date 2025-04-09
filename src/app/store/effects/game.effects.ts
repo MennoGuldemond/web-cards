@@ -21,6 +21,7 @@ import {
   setDrawPile,
   removeFromDrawPile,
   clearDiscard,
+  discardHand,
 } from '../actions';
 import { from, map, switchMap, tap, withLatestFrom } from 'rxjs';
 import {
@@ -100,7 +101,8 @@ export class GameEffects {
               break;
             case TurnPhase.DrawPhase:
               // TODO: fix card amount based on rules
-              this.store.dispatch(drawCards({ amount: 1 }));
+              this.store.dispatch(discardHand());
+              this.store.dispatch(drawCards({ amount: 3 }));
               this.store.dispatch(nextPhase());
               break;
           }

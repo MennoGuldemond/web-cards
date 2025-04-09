@@ -12,7 +12,7 @@ import {
   selectPendingCard,
   selectPlayerShips,
 } from '@app/store/selectors';
-import { applyCard, discard, nextPhase, playCard, startGame } from '@app/store/actions';
+import { applyCard, discardCard, nextPhase, playCard, startGame } from '@app/store/actions';
 import { CardComponent } from '../card/card.component';
 import { ShipComponent } from '../ship/ship.component';
 import { asShipCard, isShip } from '@app/utils';
@@ -93,7 +93,7 @@ export class GameBoardComponent implements OnInit {
   }
 
   dropInSalvage(event: CdkDragDrop<any, any, any>) {
-    this.store.dispatch(discard({ card: event.item.data }));
+    this.store.dispatch(discardCard({ card: event.item.data }));
   }
 
   onShipClicked(ship: ShipCard) {
