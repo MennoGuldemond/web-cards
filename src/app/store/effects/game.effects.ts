@@ -18,10 +18,9 @@ import {
   processEndOfTurnEffects,
   damageShip,
   startGame,
-  setGameDeck,
-  removeFromGameDeck,
+  setDrawPile,
+  removeFromDrawPile,
   clearDiscard,
-  removeCardFromGameDeck,
 } from '../actions';
 import { from, map, switchMap, tap, withLatestFrom } from 'rxjs';
 import {
@@ -35,7 +34,14 @@ import {
   withRandomId,
 } from '@app/utils';
 import { Action, Store } from '@ngrx/store';
-import { selectAllShips, selectDeckCards, selectDiscard, selectGameDeck, selectPhase, selectTurn } from '../selectors';
+import {
+  selectAllShips,
+  selectDeckCards,
+  selectDiscardPile,
+  selectDrawPile,
+  selectPhase,
+  selectTurn,
+} from '../selectors';
 import { Card, EffectColor, Effects, ShipCard, TurnPhase } from '@app/models';
 import { FloatEffectService } from '@app/services';
 
@@ -51,7 +57,7 @@ export class GameEffects {
       withLatestFrom(this.store.select(selectDeckCards)),
       map(([action, deckCards]) => {
         const shuffled = shuffleArray([...deckCards]); // clone + shuffle
-        this.store.dispatch(setGameDeck({ cards: shuffled }));
+        this.store.dispatch(setDrawPile({ cards: shuffled }));
         this.store.dispatch(setPhase({ phase: TurnPhase.EnemyPlay }));
         return drawCards({ amount: 3 });
       })
@@ -117,7 +123,7 @@ export class GameEffects {
   drawCards$ = createEffect(() =>
     this.actions$.pipe(
       ofType(drawCards),
-      withLatestFrom(this.store.select(selectGameDeck), this.store.select(selectDiscard)),
+      withLatestFrom(this.store.select(selectDrawPile), this.store.select(selectDiscardPile)),
       map(([action, deck, discardPile]) => {
         let cardsToDraw = action.amount;
         const drawnCards: Card[] = [];
@@ -128,7 +134,7 @@ export class GameEffects {
         cardsToDraw -= fromDeck.length;
 
         // Remove cards from deck
-        this.store.dispatch(removeFromGameDeck({ amount: fromDeck.length }));
+        this.store.dispatch(removeFromDrawPile({ amount: fromDeck.length }));
 
         // If not enough, shuffle discard and draw remaining cards
         if (cardsToDraw > 0 && discardPile.length > 0) {
@@ -137,8 +143,8 @@ export class GameEffects {
           drawnCards.push(...fromDiscard.map(withRandomId));
 
           // Add remaning shuffled cards to the deck
-          this.store.dispatch(setGameDeck({ cards: shuffled }));
-          this.store.dispatch(removeFromGameDeck({ amount: cardsToDraw }));
+          this.store.dispatch(setDrawPile({ cards: shuffled }));
+          this.store.dispatch(removeFromDrawPile({ amount: cardsToDraw }));
 
           // Dispatch removal of cards from discard (optional if discard is cleared)
           this.store.dispatch(clearDiscard());
@@ -160,10 +166,6 @@ export class GameEffects {
           actions.push(useFuel({ amount: action.card.cost }));
         } else {
           if (isEconomic(action.card)) {
-            if (hasEffect(action.card, Effects.consume)) {
-              // TODO: FIX this (removes wrong card)
-              actions.push(removeCardFromGameDeck({ card: action.card }));
-            }
             if (hasEffect(action.card, Effects.logistics)) {
               const drawAmount = getEffect(action.card, Effects.logistics).value;
               actions.push(drawCards({ amount: drawAmount }));

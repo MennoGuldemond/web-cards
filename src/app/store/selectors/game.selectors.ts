@@ -7,9 +7,9 @@ export interface GameState {
   arkHealth: number;
   credits: number;
   fuel: number;
-  deck: Card[];
+  drawPile: Card[];
   hand: Card[];
-  discard: Card[];
+  discardPile: Card[];
   pendingCard: Card;
 }
 
@@ -21,5 +21,5 @@ export const selectCredits = createSelector(selectGameState, (state) => state.cr
 export const selectFuel = createSelector(selectGameState, (state) => state.fuel);
 export const selectHand = createSelector(selectGameState, (state) => state.hand);
 export const selectPendingCard = createSelector(selectGameState, (state) => state.pendingCard);
-export const selectGameDeck = createSelector(selectGameState, (state) => state.deck);
-export const selectDiscard = createSelector(selectGameState, (state) => state.discard);
+export const selectDrawPile = createSelector(selectGameState, (state) => state.drawPile);
+export const selectDiscardPile = createSelector(selectGameState, (state) => state.discardPile);

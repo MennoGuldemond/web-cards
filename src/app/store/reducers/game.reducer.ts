@@ -7,9 +7,9 @@ import {
   discard,
   playCard,
   refuel,
-  removeCardFromGameDeck,
-  removeFromGameDeck,
-  setGameDeck,
+  removeCardFromDrawPile,
+  removeFromDrawPile,
+  setDrawPile,
   setPhase,
   setTurn,
   spendCredits,
@@ -26,9 +26,9 @@ export const initialGameState: GameState = {
   arkHealth: 20,
   credits: 3,
   fuel: 3,
-  deck: [],
+  drawPile: [],
   hand: [],
-  discard: [],
+  discardPile: [],
   pendingCard: null,
 };
 
@@ -44,12 +44,18 @@ const _gameReducer = createReducer(
     let handCopy = [...state.hand];
     handCopy.splice(handCopy.indexOf(card), 1);
     if (isShip(card) || isEconomic(card)) {
-      return { ...state, discard: [...state.discard, card], hand: handCopy };
+      if (hasEffect(card, Effects.consume)) {
+        return { ...state, hand: handCopy };
+      }
+      return { ...state, discardPile: [...state.discardPile, card], hand: handCopy };
     }
     return { ...state, hand: handCopy, pendingCard: card };
   }),
   on(applyCard, (state) => {
-    return { ...state, discard: [...state.discard, state.pendingCard], pendingCard: null };
+    if (hasEffect(state.pendingCard, Effects.consume)) {
+      return { ...state, pendingCard: null };
+    }
+    return { ...state, discardPile: [...state.discardPile, state.pendingCard], pendingCard: null };
   }),
   on(cancelCard, (state) => {
     return { ...state, hand: [...state.hand, state.pendingCard], pendingCard: null };
@@ -60,7 +66,7 @@ const _gameReducer = createReducer(
   on(discard, (state, { card }) => {
     let handCopy = [...state.hand];
     handCopy.splice(handCopy.indexOf(card), 1);
-    return { ...state, hand: handCopy, discard: [...state.discard, card] };
+    return { ...state, hand: handCopy, discardPile: [...state.discardPile, card] };
   }),
   on(takeDamage, (state, { amount }) => {
     return { ...state, arkHealth: state.arkHealth - amount };
@@ -74,21 +80,21 @@ const _gameReducer = createReducer(
   on(refuel, (state, { amount }) => {
     return { ...state, fuel: state.fuel + amount };
   }),
-  on(setGameDeck, (state, { cards }) => {
-    return { ...state, deck: cards };
+  on(setDrawPile, (state, { cards }) => {
+    return { ...state, drawPile: cards };
   }),
-  on(removeFromGameDeck, (state, { amount }) => ({
+  on(removeFromDrawPile, (state, { amount }) => ({
     ...state,
-    deck: state.deck.slice(amount),
+    drawPile: state.drawPile.slice(amount),
   })),
-  on(removeCardFromGameDeck, (state, { card }) => {
-    let deckCopy = [...state.deck];
+  on(removeCardFromDrawPile, (state, { card }) => {
+    let deckCopy = [...state.drawPile];
     deckCopy.splice(deckCopy.indexOf(card), 1);
-    return { ...state, deck: deckCopy };
+    return { ...state, drawPile: deckCopy };
   }),
   on(clearDiscard, (state) => ({
     ...state,
-    discard: initialGameState.discard,
+    discardPile: initialGameState.discardPile,
   }))
 );
 
