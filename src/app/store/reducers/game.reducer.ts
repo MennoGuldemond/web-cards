@@ -70,7 +70,9 @@ const _gameReducer = createReducer(
     return { ...state, hand: handCopy, discardPile: [...state.discardPile, card] };
   }),
   on(discardHand, (state) => {
-    return { ...state, hand: [], discardPile: [...state.discardPile, ...state.hand] };
+    const toKeep = state.hand.filter((card) => hasEffect(card, Effects.retain));
+    const toDiscard = state.hand.filter((card) => !hasEffect(card, Effects.retain));
+    return { ...state, hand: toKeep, discardPile: [...state.discardPile, ...toDiscard] };
   }),
   on(takeDamage, (state, { amount }) => {
     return { ...state, arkHealth: state.arkHealth - amount };

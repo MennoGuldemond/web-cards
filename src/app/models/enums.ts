@@ -28,6 +28,7 @@ export enum Effects {
   logistics = 'Logistics', // Draw extra cards
   gravityWell = 'Gravity well', // Slows initiative of enemy ships
   consume = 'Consume', // Card can be used once per game
+  retain = 'Retain', // Card does not get discarded end of turn
 }
 
 export enum TurnPhase {

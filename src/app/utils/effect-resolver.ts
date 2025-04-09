@@ -37,6 +37,8 @@ export function getDescription(effect: CardEffect): string {
       return `Absorbs ${effect.value} damage before health is affected.`;
     case Effects.consume:
       return `Get's consumed on use.`;
+    case Effects.retain:
+      return `Does not discard end of turn`;
     default:
       return '';
   }
@@ -62,6 +64,8 @@ export function getShortDescription(effect: CardEffect): string {
       return `Shield ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}`;
     case Effects.consume:
       return `Consume`;
+    case Effects.retain:
+      return `Retain`;
     default:
       return '';
   }
