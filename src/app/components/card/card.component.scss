@@ -15,7 +15,7 @@
 .space-card {
   transform: scale(0.8);
 
-  height: 350px;
+  height: 380px;
   width: 250px;
   background: radial-gradient(circle, #222 30%, #000 100%);
   border: 2px solid vars.$card-cyan;
@@ -58,7 +58,7 @@
 
   .card-image {
     width: 100%;
-    height: 150px;
+    height: 180px;
     object-fit: cover;
     border-bottom: 2px solid vars.$card-cyan;
   }
