@@ -67,11 +67,11 @@ export class CardEditComponent implements OnInit {
     this.store.dispatch(saveCard({ card: toSave }));
   }
 
-  addEffect(): void {
+  addEffect() {
     this.effects.push(this.createEffectGroup());
   }
 
-  removeEffect(index: number): void {
+  removeEffect(index: number) {
     this.effects.removeAt(index);
   }
 

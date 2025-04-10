@@ -14,7 +14,7 @@ import { getCards, getSettings, getUser } from './store/actions';
 export class AppComponent implements OnInit {
   store = inject(Store);
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.store.dispatch(getUser());
     this.store.dispatch(getSettings());
     this.store.dispatch(getCards());

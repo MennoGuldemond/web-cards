@@ -6,3 +6,5 @@ export * from './game-board/game-board.component';
 export * from './user-menu/user-menu.component';
 export * from './ship/ship.component';
 export * from './effect-float/effect-float.component';
+export * from './scenario-builder/scenario-builder.component';
+export * from './scenario-overview/scenario-overview.component';

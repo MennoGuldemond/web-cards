@@ -1,0 +1,68 @@
+@if (form) {
+<form [formGroup]="form">
+  <div class="input-columns">
+    <div class="column">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" />
+      </mat-form-field>
+    </div>
+    <div class="column">
+      <mat-form-field>
+        <mat-label>Description</mat-label>
+        <textarea
+          matInput
+          placeholder="Write a description for the scenario"
+          formControlName="description"
+          rows="4"
+        ></textarea>
+      </mat-form-field>
+    </div>
+  </div>
+  <button mat-raised-button type="button" (click)="addWave()" class="add-wave-btn">Add Wave</button>
+  <div formArrayName="waves" class="waves">
+    @for (pair of waves.controls; track pair; let i = $index) {
+    <div [formGroupName]="i">
+      <button mat-mini-fab (click)="removeWave(i)">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <mat-form-field>
+        <mat-label>Turn</mat-label>
+        <input matInput formControlName="turn" type="number" />
+      </mat-form-field>
+      <div class="enemy-list">
+        <button mat-stroked-button color="primary" (click)="addEnemy(i)">Add Enemy</button>
+        @for (enemyId of waves.at(i).get('enemies').value; track enemyId; let j = $index) {
+        <div class="enemy-entry">
+          <mat-form-field>
+            <mat-label>Enemy Ship</mat-label>
+            <mat-select [value]="enemyId" (selectionChange)="onEnemyChange(i, j, $event.value)">
+              @for (ship of enemyShips$ | async; track ship) {
+              <mat-option [value]="ship.id">{{ ship.title }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <button mat-icon-button color="warn" (click)="removeEnemy(i, j)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+        }
+      </div>
+    </div>
+    }
+  </div>
+  <div>
+    <button
+      mat-raised-button
+      color="accent"
+      class="save-button"
+      type="submit"
+      [disabled]="form.invalid || !isFormChanged()"
+      (click)="save()"
+    >
+      Save
+    </button>
+  </div>
+</form>
+}

@@ -10,7 +10,7 @@ import {
   setDoc,
 } from '@angular/fire/firestore';
 import { Card } from '@app/models';
-import { from, map, Observable, tap } from 'rxjs';
+import { from, map, Observable } from 'rxjs';
 import { SettingsService } from './settings.service';
 
 @Injectable({

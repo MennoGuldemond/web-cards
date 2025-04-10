@@ -1,0 +1,34 @@
+form {
+  padding: 1em;
+}
+
+.input-columns {
+  display: flex;
+  gap: 2em;
+
+  > div.column {
+    display: flex;
+    flex: 50%;
+    flex-direction: column;
+    gap: 1em;
+  }
+}
+
+.add-wave-btn {
+  margin: 1em 0;
+}
+
+.waves {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  > div {
+    display: flex;
+    gap: 1em;
+  }
+}
+
+.enemy-list {
+  display: flex;
+  gap: 1em;
+}

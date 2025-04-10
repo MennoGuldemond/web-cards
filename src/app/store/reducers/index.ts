@@ -4,3 +4,4 @@ export * from './game.reducer';
 export * from './setting.reducer';
 export * from './battlefield.reducer';
 export * from './deck.reducer';
+export * from './scenario.reducer';

@@ -18,6 +18,7 @@ import {
   cardReducer,
   deckReducer,
   gameReducer,
+  scenarioReducer,
   settingReducer,
 } from './store/reducers';
 import {
@@ -26,6 +27,7 @@ import {
   CardEffects,
   DeckEffects,
   GameEffects,
+  ScenarioEffects,
   SettingEffects,
 } from './store/effects';
 
@@ -46,7 +48,16 @@ export const appConfig: ApplicationConfig = {
     provideState({ name: 'settings', reducer: settingReducer }),
     provideState({ name: 'battlefield', reducer: battlefieldReducer }),
     provideState({ name: 'deck', reducer: deckReducer }),
-    provideEffects([AuthEffects, CardEffects, GameEffects, SettingEffects, BattlefieldEffects, DeckEffects]),
+    provideState({ name: 'scenario', reducer: scenarioReducer }),
+    provideEffects([
+      AuthEffects,
+      CardEffects,
+      GameEffects,
+      SettingEffects,
+      BattlefieldEffects,
+      DeckEffects,
+      ScenarioEffects,
+    ]),
     provideStoreDevtools({ maxAge: 25, logOnly: environment.production }),
   ],
 };

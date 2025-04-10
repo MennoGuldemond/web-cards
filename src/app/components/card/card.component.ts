@@ -14,7 +14,7 @@ export class CardComponent implements OnInit {
   @Input() card: Card;
   showTooltip = false;
 
-  ngOnInit(): void {
+  ngOnInit() {
     if (this.isShip()) {
       this.card = asShipCard(this.card);
     }
