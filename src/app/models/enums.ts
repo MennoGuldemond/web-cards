@@ -29,6 +29,8 @@ export enum Effects {
   gravityWell = 'Gravity well', // Slows initiative of enemy ships
   consume = 'Consume', // Card can be used once per game
   retain = 'Retain', // Card does not get discarded end of turn
+  credits = 'Credits', // Add credits
+  fuel = 'Fuel', // Add fuel
 }
 
 export enum TurnPhase {

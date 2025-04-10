@@ -172,6 +172,14 @@ export class GameEffects {
               const drawAmount = getEffect(action.card, Effects.logistics).value;
               actions.push(drawCards({ amount: drawAmount }));
             }
+            if (hasEffect(action.card, Effects.credits)) {
+              const amount = getEffect(action.card, Effects.credits).value;
+              actions.push(spendCredits({ amount: -amount }));
+            }
+            if (hasEffect(action.card, Effects.fuel)) {
+              const amount = getEffect(action.card, Effects.fuel).value;
+              actions.push(useFuel({ amount: -amount }));
+            }
           }
           actions.push(spendCredits({ amount: action.card.cost }));
         }

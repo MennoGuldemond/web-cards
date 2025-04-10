@@ -28,7 +28,7 @@ export function getDescription(effect: CardEffect): string {
     case Effects.regeneration:
       return `Restore ${effect.value} HP after each round.`;
     case Effects.logistics:
-      return `Draw ${effect.value} cards.`;
+      return `Draw ${effect.value} card${effect.value > 1 ? 's' : ''}.`;
     case Effects.retaliate:
       return `Deal ${effect.value} damage back to the attacker.`;
     case Effects.gravityWell:
@@ -39,6 +39,10 @@ export function getDescription(effect: CardEffect): string {
       return `Get's consumed on use.`;
     case Effects.retain:
       return `Does not discard end of turn`;
+    case Effects.credits:
+      return `Add ${effect.value} credit${effect.value > 1 ? 's' : ''}.`;
+    case Effects.fuel:
+      return `Add ${effect.value} fuel.`;
     default:
       return '';
   }
@@ -66,6 +70,10 @@ export function getShortDescription(effect: CardEffect): string {
       return `Consume`;
     case Effects.retain:
       return `Retain`;
+    case Effects.credits:
+      return `Credits ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}`;
+    case Effects.fuel:
+      return `Fuel ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}`;
     default:
       return '';
   }
