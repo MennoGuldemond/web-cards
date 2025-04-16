@@ -20,7 +20,7 @@ export enum EffectColor {
 export enum Effects {
   initiative = 'Initiative', // The lower the initiative, the earlier you get your turn in battle
   health = 'Health', // Add max health
-  stealth = 'Stealth', // Cannot be attacked directly
+  stealth = 'Stealth', // Cannot be targeted by cards directly
   dodge = 'Dodge', // Decreases the chance of being hit in percentages
   regeneration = 'Regeneration', // Restores HP after a round
   shield = 'Shield', // Absorbs an amount of damage before health is affected
@@ -31,6 +31,11 @@ export enum Effects {
   retain = 'Retain', // Card does not get discarded end of turn
   credits = 'Credits', // Add credits
   fuel = 'Fuel', // Add fuel
+  repair = 'Repair', // Restore health
+  damage = 'Damage', // Deal damage
+  advance = 'Advance', // Move a ship to the frontline
+  frontline = 'Frontline', // This ship will always be deployed to the frontline
+  backline = 'Backline', // This ship will always be deployed to the backline
 }
 
 export enum TurnPhase {

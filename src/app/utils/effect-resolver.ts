@@ -1,4 +1,4 @@
-import { Card, CardEffect, Effects, ShipCard } from '@app/models';
+import { CardEffect, Effects, ShipCard } from '@app/models';
 
 export function applyToShip(effect: CardEffect, target: ShipCard) {
   switch (effect.name) {
@@ -43,6 +43,16 @@ export function getDescription(effect: CardEffect): string {
       return `Add ${effect.value} credit${effect.value > 1 ? 's' : ''}.`;
     case Effects.fuel:
       return `Add ${effect.value} fuel.`;
+    case Effects.damage:
+      return `Deal ${effect.value} damage.`;
+    case Effects.repair:
+      return `Restore ${effect.value} HP.`;
+    case Effects.advance:
+      return `Move a ship to the frontline.`;
+    case Effects.frontline:
+      return `This ship will always be deployed to the frontline.`;
+    case Effects.backline:
+      return `This ship will always be deployed to the backline.`;
     default:
       return '';
   }
@@ -74,6 +84,18 @@ export function getShortDescription(effect: CardEffect): string {
       return `Credits ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}`;
     case Effects.fuel:
       return `Fuel ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}`;
+    case Effects.damage:
+      return `Damage ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}`;
+    case Effects.repair:
+      return `Repair ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}`;
+    case Effects.advance:
+      return `Advance`;
+    case Effects.frontline:
+      return `Frontline`;
+    case Effects.backline:
+      return `Backline`;
+    case Effects.stealth:
+      return `Stealth`;
     default:
       return '';
   }
