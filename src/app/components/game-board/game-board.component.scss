@@ -61,7 +61,6 @@
     margin: 1rem;
     border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
-    padding: 10px;
 
     .battlefield-guide {
       position: absolute;
@@ -91,11 +90,24 @@
   .player-side,
   .enemy-side {
     display: flex;
-    flex-wrap: wrap;
     gap: 10px;
-    width: 45%;
+    padding: 1em;
+    width: 48%;
     justify-content: center;
     align-items: center;
+  }
+  .player-side {
+    justify-content: right;
+  }
+  .enemy-side {
+    justify-content: left;
+  }
+
+  .battlefield-separator {
+    border-right: 2px solid rgba(255, 255, 255, 0.2);
+    border-left: 2px solid rgba(255, 255, 255, 0.2);
+    flex: 4%;
+    height: 100%;
   }
 
   .ship-preview {
