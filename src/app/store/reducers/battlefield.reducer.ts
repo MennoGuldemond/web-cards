@@ -8,6 +8,8 @@ import {
   endBattle,
   startBattle,
   addEffectsToShip,
+  reorderEnemyShips,
+  reorderPlayerShips,
 } from '../actions';
 import { BattlefieldState } from '../selectors';
 import { asShip, mergeEffects } from '@app/utils';
@@ -36,6 +38,14 @@ const _battlefieldReducer = createReducer(
           }
         : s
     ),
+  })),
+  on(reorderPlayerShips, (state, { newOrder }) => ({
+    ...state,
+    playerShips: newOrder.slice(0, 4), // Ensure max 4 ships
+  })),
+  on(reorderEnemyShips, (state, { newOrder }) => ({
+    ...state,
+    enemyShips: newOrder.slice(0, 4), // Ensure max 4 ships
   })),
   on(damageShip, (state, { card, amount }) => {
     return {
