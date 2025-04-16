@@ -20,11 +20,11 @@ export const initialBattlefieldState: BattlefieldState = {
 
 const _battlefieldReducer = createReducer(
   initialBattlefieldState,
-  on(addPlayerShip, (state, action) => {
-    return { ...state, playerShips: [...state.playerShips, asShip(action.card)] };
+  on(addPlayerShip, (state, { card }) => {
+    return { ...state, playerShips: [...state.playerShips, asShip(card)] };
   }),
-  on(addEnemies, (state, action) => {
-    return { ...state, enemyShips: [...state.enemyShips, ...action.cards.map(asShip)] };
+  on(addEnemies, (state, { cards }) => {
+    return { ...state, enemyShips: [...state.enemyShips, ...cards.map(asShip)] };
   }),
   on(addEffectsToShip, (state, action) => ({
     ...state,

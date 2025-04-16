@@ -5,6 +5,10 @@ export function isShip(card: Card): boolean {
   return card.cardType === CardType.ship;
 }
 
+export function isEconomic(card: Card): boolean {
+  return card.cardType === CardType.economic;
+}
+
 /** Retruns a ShipCard with the default properties set based on the cards data. */
 export function asShipCard(card: Card): ShipCard {
   if (isShip(card)) {

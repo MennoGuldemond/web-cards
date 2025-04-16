@@ -12,7 +12,7 @@ import {
   selectPendingCard,
   selectPlayerShips,
 } from '@app/store/selectors';
-import { applyCard, discard, drawCards, nextPhase, playCard, setPhase } from '@app/store/actions';
+import { applyCard, discardCard, nextPhase, playCard, startGame } from '@app/store/actions';
 import { CardComponent } from '../card/card.component';
 import { ShipComponent } from '../ship/ship.component';
 import { asShipCard, isShip } from '@app/utils';
@@ -51,8 +51,9 @@ export class GameBoardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.store.dispatch(drawCards({ amount: 5 }));
-    this.store.dispatch(setPhase({ phase: TurnPhase.EnemyPlay }));
+    setTimeout(() => {
+      this.store.dispatch(startGame());
+    }, 1000);
 
     this.pendingCard$.pipe(skip(1)).subscribe((pendingCard) => {
       if (pendingCard) {
@@ -92,7 +93,7 @@ export class GameBoardComponent implements OnInit {
   }
 
   dropInSalvage(event: CdkDragDrop<any, any, any>) {
-    this.store.dispatch(discard({ card: event.item.data }));
+    this.store.dispatch(discardCard({ card: event.item.data }));
   }
 
   onShipClicked(ship: ShipCard) {

@@ -13,7 +13,7 @@
 
   <mat-card-content>
     @for (effect of card.effects; track effect.name) {
-    <p>{{ effect.name }} {{ effect.value > 0 ? '+' : '-' }} {{ effect.value }}</p>
+    <p>{{ getShortEffectDescription(effect) }}</p>
     } @if (isShip()) {
     <div class="attack-container">
       <img src="images/attack-icon.png" class="stats-icon" alt="Attack Icon" />

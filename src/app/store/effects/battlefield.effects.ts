@@ -11,11 +11,12 @@ import {
   attackStart,
   attackEnd,
 } from '../actions';
-import { delay, map, of, switchMap, withLatestFrom } from 'rxjs';
-import { Store } from '@ngrx/store';
+import { concat, delay, map, Observable, of, switchMap, tap, withLatestFrom } from 'rxjs';
+import { Action, Store } from '@ngrx/store';
 import { selectAllEnemyShipCards, selectBattlefieldState, selectGameState } from '../selectors';
-import { calculateHit, generateEnemyWave, getShipElement } from '@app/utils';
+import { calculateHit, generateEnemyWave, getEffect, getShipElement, hasEffect } from '@app/utils';
 import { FloatEffectService } from '@app/services';
+import { EffectColor, Effects } from '@app/models';
 
 @Injectable()
 export class BattlefieldEffects {
@@ -42,8 +43,9 @@ export class BattlefieldEffects {
         ofType(damageShip),
         map((action) => {
           const isHeal = action.amount < 0;
+          const color = isHeal ? EffectColor.positive : EffectColor.negative;
           const text = `health ${isHeal ? '+' : '-'}${isHeal ? action.amount * -1 : action.amount}`;
-          this.floatEffectService.show(text, getShipElement(action.card.id), isHeal);
+          this.floatEffectService.show(text, getShipElement(action.card.id), color);
           if (action.card.ship.health <= action.amount) {
             this.store.dispatch(destroyShip({ card: action.card }));
           }
@@ -75,19 +77,39 @@ export class BattlefieldEffects {
       ofType(attackStart),
       withLatestFrom(this.store.select(selectBattlefieldState)),
       switchMap(([action, battlefieldState]) => {
-        if (battlefieldState.battleQue.length) {
-          const attacker = battlefieldState.battleQue[0];
-          const defender = attacker.ship.isEnemy ? battlefieldState.playerShips[0] : battlefieldState.enemyShips[0];
+        if (!battlefieldState.battleQue.length) {
+          return of(endBattle()).pipe(delay(this.BATTLE_DELAY));
+        }
+        const attacker = battlefieldState.battleQue[0];
+        const defender = attacker.ship.isEnemy ? battlefieldState.playerShips[0] : battlefieldState.enemyShips[0];
+        const actions: Observable<Action>[] = [];
 
+        if (attacker?.ship?.attack && defender) {
+          let defenderDies = false;
           if (calculateHit(attacker, defender)) {
+            // Deal damage to defender
             this.store.dispatch(damageShip({ card: defender, amount: attacker.ship.attack }));
+            defenderDies = defender.ship.health <= attacker.ship.attack;
           } else {
-            this.floatEffectService.show('miss', getShipElement(defender.id));
+            this.floatEffectService.show('miss', getShipElement(defender.id), EffectColor.neutral);
           }
 
-          return of(attackEnd()).pipe(delay(this.BATTLE_DELAY));
+          // If the defender survives and has retalion, retaliate
+          if (hasEffect(defender, Effects.retaliate) && !defenderDies) {
+            const retaliateDamage = getEffect(defender, Effects.retaliate).value;
+            actions.push(
+              of(null).pipe(
+                delay(250), // Retaliate delay
+                tap(() => {
+                  this.store.dispatch(damageShip({ card: attacker, amount: retaliateDamage }));
+                  this.floatEffectService.show('Retaliate', getShipElement(defender.id), EffectColor.neutral);
+                })
+              )
+            );
+          }
         }
-        return of(endBattle()).pipe(delay(this.BATTLE_DELAY));
+        actions.push(of(attackEnd()).pipe(delay(this.BATTLE_DELAY)));
+        return concat(...actions); // Combine all steps in order
       })
     )
   );

@@ -27,6 +27,22 @@ export function getDescription(effect: CardEffect): string {
       return `Cannot be attacked directly`;
     case Effects.regeneration:
       return `Restore ${effect.value} HP after each round.`;
+    case Effects.logistics:
+      return `Draw ${effect.value} card${effect.value > 1 ? 's' : ''}.`;
+    case Effects.retaliate:
+      return `Deal ${effect.value} damage back to the attacker.`;
+    case Effects.gravityWell:
+      return `Slow initiative of enemy ships by ${effect.value}.`;
+    case Effects.shield:
+      return `Absorbs ${effect.value} damage before health is affected.`;
+    case Effects.consume:
+      return `Get's consumed on use.`;
+    case Effects.retain:
+      return `Does not discard end of turn`;
+    case Effects.credits:
+      return `Add ${effect.value} credit${effect.value > 1 ? 's' : ''}.`;
+    case Effects.fuel:
+      return `Add ${effect.value} fuel.`;
     default:
       return '';
   }
@@ -35,13 +51,29 @@ export function getDescription(effect: CardEffect): string {
 export function getShortDescription(effect: CardEffect): string {
   switch (effect.name) {
     case Effects.health:
-      return `Health ${effect.value > 0 ? '+' + effect.value : '-' + effect.value}`;
+      return `Health ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}`;
     case Effects.initiative:
-      return `Initiative ${effect.value > 0 ? '+' + effect.value : '-' + effect.value}`;
+      return `Initiative ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}`;
     case Effects.dodge:
-      return `Dodge ${effect.value > 0 ? '+' + effect.value : '-' + effect.value}%`;
+      return `Dodge ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}%`;
     case Effects.regeneration:
-      return `Regeneration ${effect.value > 0 ? '+' + effect.value : '-' + effect.value}`;
+      return `Regeneration ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}`;
+    case Effects.logistics:
+      return `Logistics ${effect.value}`;
+    case Effects.retaliate:
+      return `Retaliate ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}`;
+    case Effects.gravityWell:
+      return `Gravity Well ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}`;
+    case Effects.shield:
+      return `Shield ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}`;
+    case Effects.consume:
+      return `Consume`;
+    case Effects.retain:
+      return `Retain`;
+    case Effects.credits:
+      return `Credits ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}`;
+    case Effects.fuel:
+      return `Fuel ${effect.value > 0 ? '+ ' + effect.value : '- ' + effect.value}`;
     default:
       return '';
   }

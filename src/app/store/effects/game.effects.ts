@@ -17,12 +17,33 @@ import {
   addEffectsToShip,
   processEndOfTurnEffects,
   damageShip,
+  startGame,
+  setDrawPile,
+  removeFromDrawPile,
+  clearDiscard,
+  discardHand,
 } from '../actions';
-import { map, tap, withLatestFrom } from 'rxjs';
-import { getShipElement, getShortDescription, isShip, withRandomId } from '@app/utils';
-import { Store } from '@ngrx/store';
-import { selectAllPlayerCards, selectAllShips, selectPhase, selectTurn } from '../selectors';
-import { Effects, ShipCard, TurnPhase } from '@app/models';
+import { from, map, switchMap, tap, withLatestFrom } from 'rxjs';
+import {
+  getEffect,
+  getShipElement,
+  getShortDescription,
+  hasEffect,
+  isEconomic,
+  isShip,
+  shuffleArray,
+  withRandomId,
+} from '@app/utils';
+import { Action, Store } from '@ngrx/store';
+import {
+  selectAllShips,
+  selectDeckCards,
+  selectDiscardPile,
+  selectDrawPile,
+  selectPhase,
+  selectTurn,
+} from '../selectors';
+import { Card, EffectColor, Effects, ShipCard, TurnPhase } from '@app/models';
 import { FloatEffectService } from '@app/services';
 
 @Injectable()
@@ -30,6 +51,19 @@ export class GameEffects {
   private store = inject(Store);
   private actions$ = inject(Actions);
   private floatEffectService = inject(FloatEffectService);
+
+  startGame$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(startGame),
+      withLatestFrom(this.store.select(selectDeckCards)),
+      map(([action, deckCards]) => {
+        const shuffled = shuffleArray([...deckCards]); // clone + shuffle
+        this.store.dispatch(setDrawPile({ cards: shuffled }));
+        this.store.dispatch(setPhase({ phase: TurnPhase.EnemyPlay }));
+        return drawCards({ amount: 3 });
+      })
+    )
+  );
 
   nextPhase$ = createEffect(() =>
     this.actions$.pipe(
@@ -67,7 +101,8 @@ export class GameEffects {
               break;
             case TurnPhase.DrawPhase:
               // TODO: fix card amount based on rules
-              this.store.dispatch(drawCards({ amount: 1 }));
+              this.store.dispatch(discardHand());
+              this.store.dispatch(drawCards({ amount: 3 }));
               this.store.dispatch(nextPhase());
               break;
           }
@@ -90,10 +125,34 @@ export class GameEffects {
   drawCards$ = createEffect(() =>
     this.actions$.pipe(
       ofType(drawCards),
-      withLatestFrom(this.store.select(selectAllPlayerCards)),
-      map(([action, playerCards]) => {
-        const toDraw = playerCards.slice(0, Math.min(action.amount, playerCards.length)).map(withRandomId);
-        return addToHand({ cards: toDraw });
+      withLatestFrom(this.store.select(selectDrawPile), this.store.select(selectDiscardPile)),
+      map(([action, deck, discardPile]) => {
+        let cardsToDraw = action.amount;
+        const drawnCards: Card[] = [];
+
+        // Draw from deck
+        const fromDeck = deck.slice(0, cardsToDraw);
+        drawnCards.push(...fromDeck.map(withRandomId));
+        cardsToDraw -= fromDeck.length;
+
+        // Remove cards from deck
+        this.store.dispatch(removeFromDrawPile({ amount: fromDeck.length }));
+
+        // If not enough, shuffle discard and draw remaining cards
+        if (cardsToDraw > 0 && discardPile.length > 0) {
+          const shuffled = shuffleArray([...discardPile]);
+          const fromDiscard = shuffled.slice(0, cardsToDraw);
+          drawnCards.push(...fromDiscard.map(withRandomId));
+
+          // Add remaning shuffled cards to the deck
+          this.store.dispatch(setDrawPile({ cards: shuffled }));
+          this.store.dispatch(removeFromDrawPile({ amount: cardsToDraw }));
+
+          // Dispatch removal of cards from discard (optional if discard is cleared)
+          this.store.dispatch(clearDiscard());
+        }
+
+        return addToHand({ cards: drawnCards });
       })
     )
   );
@@ -101,13 +160,31 @@ export class GameEffects {
   playCard$ = createEffect(() =>
     this.actions$.pipe(
       ofType(playCard),
-      map((action) => {
+      switchMap((action) => {
+        const actions: Action[] = [];
+
         if (isShip(action.card)) {
-          this.store.dispatch(addPlayerShip({ card: action.card as ShipCard }));
-          return useFuel({ amount: action.card.cost });
+          actions.push(addPlayerShip({ card: action.card as ShipCard }));
+          actions.push(useFuel({ amount: action.card.cost }));
         } else {
-          return spendCredits({ amount: action.card.cost });
+          if (isEconomic(action.card)) {
+            if (hasEffect(action.card, Effects.logistics)) {
+              const drawAmount = getEffect(action.card, Effects.logistics).value;
+              actions.push(drawCards({ amount: drawAmount }));
+            }
+            if (hasEffect(action.card, Effects.credits)) {
+              const amount = getEffect(action.card, Effects.credits).value;
+              actions.push(spendCredits({ amount: -amount }));
+            }
+            if (hasEffect(action.card, Effects.fuel)) {
+              const amount = getEffect(action.card, Effects.fuel).value;
+              actions.push(useFuel({ amount: -amount }));
+            }
+          }
+          actions.push(spendCredits({ amount: action.card.cost }));
         }
+
+        return from(actions); // emit actions one-by-one
       })
     )
   );
@@ -117,7 +194,11 @@ export class GameEffects {
       ofType(applyCard),
       map((action) => {
         action.effects.forEach((e) => {
-          this.floatEffectService.show(getShortDescription(e), getShipElement(action.targetShip.id), true);
+          this.floatEffectService.show(
+            getShortDescription(e),
+            getShipElement(action.targetShip.id),
+            EffectColor.positive
+          );
         });
         return addEffectsToShip({ card: action.targetShip, effects: action.effects });
       })

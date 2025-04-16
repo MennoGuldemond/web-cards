@@ -11,12 +11,26 @@ export enum CardRarity {
   rare = 'Rare',
 }
 
+export enum EffectColor {
+  positive = 'Positive',
+  neutral = 'Neutral',
+  negative = 'Negative',
+}
+
 export enum Effects {
-  initiative = 'Initiative', // The lower the initiative, the earlier you get your turn in battle.
+  initiative = 'Initiative', // The lower the initiative, the earlier you get your turn in battle
   health = 'Health', // Add max health
-  stealth = 'Stealth', // Allows atticking without retaliation
+  stealth = 'Stealth', // Cannot be attacked directly
   dodge = 'Dodge', // Decreases the chance of being hit in percentages
   regeneration = 'Regeneration', // Restores HP after a round
+  shield = 'Shield', // Absorbs an amount of damage before health is affected
+  retaliate = 'Retaliate', // Deals damage back to the attacker
+  logistics = 'Logistics', // Draw extra cards
+  gravityWell = 'Gravity well', // Slows initiative of enemy ships
+  consume = 'Consume', // Card can be used once per game
+  retain = 'Retain', // Card does not get discarded end of turn
+  credits = 'Credits', // Add credits
+  fuel = 'Fuel', // Add fuel
 }
 
 export enum TurnPhase {

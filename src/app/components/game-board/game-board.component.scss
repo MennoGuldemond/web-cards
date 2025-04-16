@@ -2,7 +2,6 @@
 
 ::ng-deep {
   .battlefield,
-  .salvage,
   .use {
     & app-card.cdk-drag-placeholder {
       display: none;
@@ -38,10 +37,11 @@
       color: vars.$space-lime;
       background-color: vars.$space-lime-transparant;
     }
-    .salvage {
-      border-color: vars.$space-red;
-      color: vars.$space-red;
-      background-color: vars.$space-red-transparent;
+    .deck {
+      border-color: vars.$card-cyan;
+      color: vars.$card-cyan;
+      background-image: url('/assets/card-back.jpg');
+      background-size: cover;
     }
   }
 }

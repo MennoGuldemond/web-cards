@@ -2,12 +2,14 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { EMPTY } from 'rxjs';
-import { map, mergeMap, catchError, switchMap } from 'rxjs/operators';
+import { map, mergeMap, catchError, switchMap, take } from 'rxjs/operators';
 import { AuthService } from '@app/services';
-import { login, logout, AUTH_SET_USER, setUser, AUTH_GET_USER, getUser } from '../actions';
+import { login, logout, setUser, getUser, getDeck, createBaseDeck } from '../actions';
+import { Store } from '@ngrx/store';
 
 @Injectable()
 export class AuthEffects {
+  private store = inject(Store);
   private actions$ = inject(Actions);
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -16,10 +18,18 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(login),
       switchMap(() => {
-        return this.authService.googleSignin();
+        return this.authService.googleSignin().pipe(
+          take(1),
+          map((response) => {
+            if (response.isNewUser) {
+              this.store.dispatch(createBaseDeck({ user: response.user }));
+            }
+            return response.user;
+          })
+        );
       }),
       map(() => {
-        return { type: AUTH_GET_USER };
+        return getUser();
       }),
       catchError((err) => {
         console.error(err);
@@ -35,7 +45,7 @@ export class AuthEffects {
         this.authService.signOut().pipe(
           map(() => {
             this.router.navigate(['/']);
-            return { type: AUTH_SET_USER, user: null };
+            return setUser({ user: null });
           }),
           catchError(() => EMPTY)
         )
@@ -50,7 +60,7 @@ export class AuthEffects {
         return this.authService.appUser$;
       }),
       map((user) => {
-        return { type: AUTH_SET_USER, user: user };
+        return setUser({ user: user as any });
       })
     )
   );
@@ -66,6 +76,7 @@ export class AuthEffects {
             localStorage.removeItem('urlBeforeLogin');
           }
           if (action.user) {
+            this.store.dispatch(getDeck());
             this.authService.updateUserData(action.user).subscribe((x) => x);
           }
         })

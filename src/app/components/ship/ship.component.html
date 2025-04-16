@@ -1,7 +1,22 @@
-<div class="ship-container player-ship" [attr.data-ship-id]="shipCard.id" [ngClass]="{ targetable: isTargetable }">
+<div
+  class="ship-container player-ship"
+  [attr.data-ship-id]="shipCard.id"
+  [ngClass]="{ targetable: isTargetable }"
+  (mouseover)="showTooltip = true"
+  (mouseleave)="showTooltip = false"
+>
   <img [src]="shipCard.ship.transparentImageUrl" class="ship-image" />
   <div class="stats">
     <span class="stat attack">{{ shipCard.ship.attack }}</span>
     <span class="stat health">{{ shipCard.ship.health }}</span>
   </div>
+
+  @if (showTooltip) {
+  <div class="tooltip">
+    <h4>{{ shipCard.title }}</h4>
+    @for (effect of shipCard.effects; track effect.name) {
+    <p>{{ getEffectDescription(effect) }}</p>
+    }
+  </div>
+  }
 </div>

@@ -3,16 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of, pipe } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { CardsService } from '@app/services';
-import {
-  CARD_SET_CARD,
-  CARD_SET_CARDS,
-  getCard,
-  getCards,
-  saveCard,
-  setCard,
-  setCards,
-  updateVersion,
-} from '../actions';
+import { getCard, getCards, saveCard, setCard, setCards, updateVersion } from '../actions';
 import { asShipCard, isShip } from '@app/utils';
 import { getFromLocalStorage, saveToLocalStorage } from '@app/utils/storage-utils';
 import { Card } from '@app/models';

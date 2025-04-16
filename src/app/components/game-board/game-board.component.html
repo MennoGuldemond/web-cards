@@ -1,16 +1,10 @@
 <div class="board">
   <div class="drop-areas">
-    <div
-      id="salvage"
-      class="salvage"
-      cdkDropList
-      #salvageList="cdkDropList"
-      (cdkDropListDropped)="dropInSalvage($event)"
-    >
-      <h2>Salvage</h2>
-    </div>
     <div id="use" class="use" cdkDropList #useList="cdkDropList" (cdkDropListDropped)="dropInUse($event)">
       <h2>Use</h2>
+    </div>
+    <div class="deck">
+      <h1>{{ (gameState$ | async)?.drawPile?.length }}</h1>
     </div>
   </div>
   <div class="play-area">
@@ -68,7 +62,7 @@
         cdkDropList
         #handList="cdkDropList"
         [cdkDropListData]="hand$ | async"
-        [cdkDropListConnectedTo]="[battlefieldList, salvageList, useList]"
+        [cdkDropListConnectedTo]="[battlefieldList, useList]"
       >
         @for (card of hand$ | async; track card.id) {
         <app-card

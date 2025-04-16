@@ -8,9 +8,9 @@ export const initialCardState: CardState = {
 
 const _cardReducer = createReducer(
   initialCardState,
-  on(setCard, (state, action) => {
-    let cards = state.cards.filter((r) => r.id !== action.card.id);
-    return { ...state, cards: [...cards, action.card] };
+  on(setCard, (state, { card }) => {
+    let cards = state.cards.filter((r) => r.id !== card.id);
+    return { ...state, cards: [...cards, card] };
   }),
   on(setCards, (state, action) => {
     // Remove outdated cards in state

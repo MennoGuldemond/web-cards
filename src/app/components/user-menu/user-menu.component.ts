@@ -51,6 +51,10 @@ export class UserMenuComponent {
     this.router.navigate(['cards-overview']);
   }
 
+  navigateToScenarioOverview() {
+    this.router.navigate(['scenario-overview']);
+  }
+
   setTheme(theme: string) {
     // this.store.dispatch(setTheme({ theme: theme }));
   }

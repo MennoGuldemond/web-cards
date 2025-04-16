@@ -1,4 +1,4 @@
-import { Effects, ShipCard } from '@app/models';
+import { Card, CardEffect, Effects, ShipCard } from '@app/models';
 
 export function generateEnemyWave(availableEnemyShips: ShipCard[], stage: number): ShipCard[] {
   // Define difficulty scaling based on stage
@@ -45,4 +45,12 @@ export function calculateHit(attacker: ShipCard, defender: ShipCard): boolean {
   // Roll to see if the attack hits
   const roll = Math.random() * 100;
   return roll < baseHitChance;
+}
+
+export function hasEffect(card: Card, effectName: string): boolean {
+  return card.effects.some((e) => e.name === effectName);
+}
+
+export function getEffect(card: Card, effectName: string): CardEffect {
+  return card.effects.find((e) => e.name === effectName);
 }

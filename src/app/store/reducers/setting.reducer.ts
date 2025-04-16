@@ -10,11 +10,11 @@ export const initialSettingState: SettingState = getFromLocalStorage<SettingStat
 
 const _settingReducer = createReducer(
   initialSettingState,
-  on(setSettings, (state, action) => {
-    return { ...state, settings: action.settings };
+  on(setSettings, (state, { settings }) => {
+    return { ...state, settings: settings };
   }),
-  on(setCardsOutdated, (state, action) => {
-    return { ...state, cardsOutdated: action.outdated };
+  on(setCardsOutdated, (state, { outdated }) => {
+    return { ...state, cardsOutdated: outdated };
   })
   // on(updateVersion, (state, action) => {
   //   return { ...state, settings: { ...state.settings, version: state.settings.version + 1 } };
