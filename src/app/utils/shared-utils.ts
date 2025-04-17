@@ -19,7 +19,12 @@ export function deepEqual(obj1: any, obj2: any): boolean {
 }
 
 /** Returns the DOM element of a ship given it's Id. */
-export function getShipElement(shipId: string): ElementRef | null {
+export function getShipElement(shipId: string): Element {
+  return document.querySelector(`[data-ship-id="${shipId}"]`);
+}
+
+/** Returns the element ref of a ship given it's Id. */
+export function getShipElementRef(shipId: string): ElementRef {
   const el = document.querySelector(`[data-ship-id="${shipId}"]`);
   return el ? new ElementRef(el) : null;
 }

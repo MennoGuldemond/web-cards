@@ -26,7 +26,7 @@ import {
 import { from, map, switchMap, tap, withLatestFrom } from 'rxjs';
 import {
   getEffect,
-  getShipElement,
+  getShipElementRef,
   getShortDescription,
   hasEffect,
   isEconomic,
@@ -196,7 +196,7 @@ export class GameEffects {
         action.effects.forEach((e) => {
           this.floatEffectService.show(
             getShortDescription(e),
-            getShipElement(action.targetShip.id),
+            getShipElementRef(action.targetShip.id),
             EffectColor.positive
           );
         });
