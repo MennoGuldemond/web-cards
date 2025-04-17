@@ -14,7 +14,7 @@ import {
 import { concat, delay, map, Observable, of, switchMap, tap, withLatestFrom } from 'rxjs';
 import { Action, Store } from '@ngrx/store';
 import { selectAllEnemyShipCards, selectBattlefieldState, selectGameState } from '../selectors';
-import { calculateHit, generateEnemyWave, getEffect, getShipElement, hasEffect } from '@app/utils';
+import { calculateHit, generateEnemyWave, getEffect, getShipElementRef, hasEffect } from '@app/utils';
 import { FloatEffectService } from '@app/services';
 import { EffectColor, Effects } from '@app/models';
 
@@ -45,7 +45,7 @@ export class BattlefieldEffects {
           const isHeal = action.amount < 0;
           const color = isHeal ? EffectColor.positive : EffectColor.negative;
           const text = `health ${isHeal ? '+' : '-'}${isHeal ? action.amount * -1 : action.amount}`;
-          this.floatEffectService.show(text, getShipElement(action.card.id), color);
+          this.floatEffectService.show(text, getShipElementRef(action.card.id), color);
           if (action.card.ship.health <= action.amount) {
             this.store.dispatch(destroyShip({ card: action.card }));
           }
@@ -91,7 +91,7 @@ export class BattlefieldEffects {
             this.store.dispatch(damageShip({ card: defender, amount: attacker.ship.attack }));
             defenderDies = defender.ship.health <= attacker.ship.attack;
           } else {
-            this.floatEffectService.show('miss', getShipElement(defender.id), EffectColor.neutral);
+            this.floatEffectService.show('miss', getShipElementRef(defender.id), EffectColor.neutral);
           }
 
           // If the defender survives and has retalion, retaliate
@@ -102,7 +102,7 @@ export class BattlefieldEffects {
                 delay(250), // Retaliate delay
                 tap(() => {
                   this.store.dispatch(damageShip({ card: attacker, amount: retaliateDamage }));
-                  this.floatEffectService.show('Retaliate', getShipElement(defender.id), EffectColor.neutral);
+                  this.floatEffectService.show('Retaliate', getShipElementRef(defender.id), EffectColor.neutral);
                 })
               )
             );
