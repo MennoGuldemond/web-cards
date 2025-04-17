@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { Action, createReducer, on } from '@ngrx/store';
 import {
   addEnemies,
   addPlayerShip,
@@ -78,6 +78,6 @@ const _battlefieldReducer = createReducer(
   }))
 );
 
-export function battlefieldReducer(state: any, action: any): BattlefieldState {
+export function battlefieldReducer(state: BattlefieldState, action: Action): BattlefieldState {
   return _battlefieldReducer(state, action);
 }

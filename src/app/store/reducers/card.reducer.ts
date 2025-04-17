@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { Action, createReducer, on } from '@ngrx/store';
 import { setCard, setCards } from '../actions';
 import { CardState } from '../selectors';
 
@@ -21,6 +21,6 @@ const _cardReducer = createReducer(
   })
 );
 
-export function cardReducer(state: any, action: any): CardState {
+export function cardReducer(state: CardState, action: Action): CardState {
   return _cardReducer(state, action);
 }

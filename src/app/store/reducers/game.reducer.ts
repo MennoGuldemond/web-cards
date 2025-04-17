@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { Action, createReducer, on } from '@ngrx/store';
 import {
   addToHand,
   applyCard,
@@ -104,6 +104,6 @@ const _gameReducer = createReducer(
   }))
 );
 
-export function gameReducer(state: any, action: any): GameState {
+export function gameReducer(state: GameState, action: Action): GameState {
   return _gameReducer(state, action);
 }

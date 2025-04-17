@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { Action, createReducer, on } from '@ngrx/store';
 import { setScenario, setScenarios } from '../actions';
 import { ScenarioState } from '../selectors';
 
@@ -21,6 +21,6 @@ const _scenarioReducer = createReducer(
   })
 );
 
-export function scenarioReducer(state: any, action: any): ScenarioState {
+export function scenarioReducer(state: ScenarioState, action: Action): ScenarioState {
   return _scenarioReducer(state, action);
 }

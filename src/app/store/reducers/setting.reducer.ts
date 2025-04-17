@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { Action, createReducer, on } from '@ngrx/store';
 import { setSettings, setCardsOutdated, updateVersion } from '../actions';
 import { SettingState } from '../selectors';
 import { getFromLocalStorage } from '@app/utils/storage-utils';
@@ -21,6 +21,6 @@ const _settingReducer = createReducer(
   // })
 );
 
-export function settingReducer(state: any, action: any): SettingState {
+export function settingReducer(state: SettingState, action: Action): SettingState {
   return _settingReducer(state, action);
 }
